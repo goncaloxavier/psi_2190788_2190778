@@ -13,8 +13,11 @@
         <activity android:name=".views.AnomalyListActivity" />
         <activity android:name=".views.VerifyAnomalyActivity" />
         <activity android:name=".views.HomeActivity" />
-        <activity android:name=".views.LoginActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".views.MenuTecnicoActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".views.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -27,9 +27,10 @@ public class LoginActivity extends AppCompatActivity {
         String username = edtUsername.getText().toString();
         String password = edtPassword.getText().toString();
 
-        Intent intent = new Intent(this, MenuTecnicoActivity.class);
-        intent.putExtra(MenuTecnicoActivity.USERNAME, username);
-        startActivity(intent);
         System.out.println("--> Username: " + username + "  Password: " + password);
+
+        Intent intent = new Intent(this, MenuTecnicoActivity.class);
+        startActivity(intent);
+
     }
 }
