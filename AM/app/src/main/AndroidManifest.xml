@@ -9,11 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".views.RelatorioActivity"></activity>
+
+        <activity android:name=".views.RelatorioActivity" ></activity>
         <activity android:name=".views.AnomalyListActivity" />
-        <activity android:name=".views.VerifyAnomalyActivity" />
+        <activity android:name=".views.VerifyAnomalyActivity" android:parentActivityName=".views.HomeActivity"/>
         <activity android:name=".views.HomeActivity" />
         <activity android:name=".views.MenuTecnicoActivity" />
+        <activity android:name=".views.AnomalyActivity" android:parentActivityName=".views.HomeActivity"/>
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait" />

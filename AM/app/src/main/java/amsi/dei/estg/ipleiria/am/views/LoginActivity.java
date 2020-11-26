@@ -29,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
 
         System.out.println("--> Username: " + username + "  Password: " + password);
 
-        Intent intent = new Intent(this, MenuTecnicoActivity.class);
+        Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
 
     }

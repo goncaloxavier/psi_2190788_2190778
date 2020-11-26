@@ -58,9 +58,8 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center"
-            android:background="@drawable/btn_background"
             android:gravity="center|center_horizontal|center_vertical"
-            android:text="Procurar Avaria" />
+            android:text="Avaria" />
 
         <Space
             android:layout_width="match_parent"
@@ -72,7 +71,6 @@
             android:layout_height="150dp"
             android:layout_gravity="center"
             android:text="Verificar"
-            android:background="@drawable/btn_background"
             />
 
         <Space
@@ -85,7 +83,6 @@
             android:layout_height="150dp"
             android:layout_gravity="center"
             android:text="Lista"
-            android:background="@drawable/btn_background"
             />
 
     </LinearLayout>
