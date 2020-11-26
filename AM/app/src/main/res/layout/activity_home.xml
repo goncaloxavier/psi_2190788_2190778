@@ -59,8 +59,8 @@
             android:layout_height="150dp"
             android:layout_gravity="center"
             android:gravity="center|center_horizontal|center_vertical"
+            android:onClick="onClickAvaria"
             android:text="Avaria"
-            android:background="@drawable/btn_background"
             />
 
         <Space
@@ -73,7 +73,6 @@
             android:layout_height="150dp"
             android:layout_gravity="center"
             android:text="Verificar"
-            android:background="@drawable/btn_background"
            />
 
         <Space
@@ -86,7 +85,6 @@
             android:layout_height="150dp"
             android:layout_gravity="center"
             android:text="Lista"
-            android:background="@drawable/btn_background"
             />
 
     </LinearLayout>
