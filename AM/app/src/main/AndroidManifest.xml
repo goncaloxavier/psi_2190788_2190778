@@ -12,20 +12,16 @@
 
         <activity android:name=".views.RelatorioActivity" ></activity>
         <activity android:name=".views.AnomalyListActivity" />
-        <activity android:name=".views.VerifyAnomalyActivity" android:parentActivityName=".views.HomeActivity"/>
+        <activity android:name=".views.VerifyAnomalyActivity"/>
         <activity android:name=".views.HomeActivity" />
         <activity android:name=".views.MenuTecnicoActivity" />
-        <activity android:name=".views.AnomalyActivity" android:parentActivityName=".views.HomeActivity"/>
-        <activity
-            android:name=".MainActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".views.LoginActivity">
+        <activity android:name=".views.LoginActivity"/>
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".views.AnomalyActivity" android:parentActivityName=".MainActivity"/>
     </application>
-
 </manifest>

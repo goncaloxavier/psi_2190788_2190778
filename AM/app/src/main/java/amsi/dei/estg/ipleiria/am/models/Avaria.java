@@ -1,8 +1,11 @@
 package amsi.dei.estg.ipleiria.am.models;
 
+import java.sql.Date;
+
 public class Avaria {
-    private int idAvaria, estado, gravidade, idDispositivo, date;
-    private String descricao, referencia;
+    private int idAvaria, estado, gravidade, idDispositivo, tipo;
+    private String date;
+    private String descricao;
 
     private static int autoIncrementId = 1;
 
@@ -38,14 +41,6 @@ public class Avaria {
         this.idDispositivo = idDispositivo;
     }
 
-    public int getDate() {
-        return date;
-    }
-
-    public void setDate(int date) {
-        this.date = date;
-    }
-
     public String getDescricao() {
         return descricao;
     }
@@ -54,20 +49,29 @@ public class Avaria {
         this.descricao = descricao;
     }
 
-    public String getReferencia() {
-        return referencia;
+    public int getTipo() {
+        return tipo;
     }
 
-    public void setReferencia(String referencia) {
-        this.referencia = referencia;
+    public void setTipo(int tipo) {
+        this.tipo = tipo;
     }
 
-    public Avaria(int idAvaria, int estado, int gravidade, int idDispositivo, int date, String descricao) {
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public Avaria(int estado, int gravidade, int tipo, int idDispositivo, String date, String descricao) {
         this.idAvaria = autoIncrementId++;
         this.estado = estado;
         this.gravidade = gravidade;
         this.idDispositivo = idDispositivo;
         this.date = date;
         this.descricao = descricao;
+        this.tipo = tipo;
     }
 }
