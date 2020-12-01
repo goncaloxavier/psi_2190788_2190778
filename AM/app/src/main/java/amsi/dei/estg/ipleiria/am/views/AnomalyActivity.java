@@ -159,4 +159,20 @@ public class AnomalyActivity extends AppCompatActivity {
                 .setIcon(android.R.drawable.ic_delete)
                 .show();
     }
+
+    public void onClickNFuncional(View view) {
+        cbFuncional.setChecked(false);
+    }
+
+    public void onClickHardware(View view) {
+        cbSoftware.setChecked(false);
+    }
+
+    public void onClickSoftware(View view) {
+        cbHardware.setChecked(false);
+    }
+
+    public void onClickFuncional(View view) {
+        cbNFuncional.setChecked(false);
+    }
 }

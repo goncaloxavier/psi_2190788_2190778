@@ -106,6 +106,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
+                android:buttonTint="@color/colorPrimaryDark"
+                android:onClick="onClickHardware"
                 android:text="Hardware" />
 
             <Space
@@ -118,7 +120,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:text="CheckBox" />
+                android:buttonTint="@color/colorPrimaryDark"
+                android:onClick="onClickSoftware"
+                android:text="Software" />
 
         </LinearLayout>
 
@@ -145,6 +149,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
+                android:buttonTint="@color/colorPrimaryDark"
+                android:onClick="onClickFuncional"
                 android:text="Funcional" />
 
             <Space
@@ -156,7 +162,9 @@
                 android:id="@+id/cbNFuncional"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Não Funcional" />
+                android:text="Não Funcional"
+                android:onClick="onClickNFuncional"
+                android:buttonTint="@color/colorPrimaryDark"/>
         </LinearLayout>
     </LinearLayout>
 
