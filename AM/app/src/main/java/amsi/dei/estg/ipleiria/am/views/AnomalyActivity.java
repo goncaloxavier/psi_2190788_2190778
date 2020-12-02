@@ -11,9 +11,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -22,15 +26,17 @@ import amsi.dei.estg.ipleiria.am.R;
 import amsi.dei.estg.ipleiria.am.models.Avaria;
 import amsi.dei.estg.ipleiria.am.models.SingletonGestorAvarias;
 
-public class AnomalyActivity extends AppCompatActivity {
+public class AnomalyActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     public static final String AVARIA = "avaria";
     public static final int ADICIONAR = 1;
     public static final int EDITAR = 2;
-    private int idAvaria;
+    private int idAvaria, spinnerPosition;
     private Avaria avaria;
+    private TextView tvEstadoEdit;
     private EditText edtDescricao, edtIdDispositivo;
     private CheckBox cbHardware, cbSoftware, cbFuncional, cbNFuncional;
+    private Spinner spinnerEstado;
     private FloatingActionButton fab;
 
     @Override
@@ -47,10 +53,17 @@ public class AnomalyActivity extends AppCompatActivity {
         cbSoftware = findViewById(R.id.cbSoftware);
         cbFuncional = findViewById(R.id.cbFuncional);
         cbNFuncional = findViewById(R.id.cbNFuncional);
-
+        spinnerEstado = findViewById(R.id.spinnerEstado);
+        tvEstadoEdit = findViewById(R.id.tvEstadoEdit);
         fab = findViewById(R.id.fab_avaria);
 
         if(avaria != null){
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.estados, android.R.layout.simple_spinner_item);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerEstado.setAdapter(adapter);
+            spinnerEstado.setOnItemSelectedListener(this);
+            spinnerEstado.setVisibility(View.VISIBLE);
+            spinnerEstado.setSelection(avaria.getEstado());
             edtDescricao.setText(avaria.getDescricao());
             edtIdDispositivo.setText(String.valueOf(avaria.getIdDispositivo()));
             if(avaria.getTipo() == 0){
@@ -71,6 +84,8 @@ public class AnomalyActivity extends AppCompatActivity {
         }
         else{
             setTitle("Adicionar Avaria");
+            tvEstadoEdit.setVisibility(View.GONE);
+            spinnerEstado.setVisibility(View.GONE);
             fab.setImageResource(R.drawable.ic_adicionar_foreground);
         }
 
@@ -89,6 +104,7 @@ public class AnomalyActivity extends AppCompatActivity {
                     }else{
                         avaria.setTipo(1);
                     }
+                    avaria.setEstado(spinnerPosition);
                     avaria.setIdDispositivo(Integer.parseInt(edtIdDispositivo.getText().toString()));
                     SingletonGestorAvarias.getInstance(getApplicationContext()).editarAvariaDB(avaria);
                 }else{
@@ -174,5 +190,15 @@ public class AnomalyActivity extends AppCompatActivity {
 
     public void onClickFuncional(View view) {
         cbNFuncional.setChecked(false);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        spinnerPosition = position;
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

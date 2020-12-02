@@ -11,7 +11,7 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="20dp"
         android:layout_weight="0"
         android:gravity="center" />
 
@@ -165,7 +165,37 @@
                 android:text="Não Funcional"
                 android:onClick="onClickNFuncional"
                 android:buttonTint="@color/colorPrimaryDark"/>
+
         </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_weight="0" />
+
+        <TextView
+            android:id="@+id/tvEstadoEdit"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Estado"
+            android:visibility="visible"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            />
+
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/spinnerEstado"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -177,4 +207,5 @@
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_adicionar_foreground" />
+
 </LinearLayout>

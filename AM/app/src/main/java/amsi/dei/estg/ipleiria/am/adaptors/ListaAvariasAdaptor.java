@@ -1,6 +1,7 @@
 package amsi.dei.estg.ipleiria.am.adaptors;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,8 +74,24 @@ public class ListaAvariasAdaptor extends BaseAdapter {
             descricao.setText(avaria.getDescricao());
             dataAvaria.setText(avaria.getDate());
             referencia.setText(String.valueOf(avaria.getIdDispositivo()));
-            tipo.setText(String.valueOf(avaria.getTipo()));
-            estado.setText(String.valueOf(avaria.getEstado()));
+            estado.setText("");
+            if(avaria.getTipo() == 0){
+                tipo.setText("Hardware");
+            }else{
+                tipo.setText("Software");
+            }
+            if(avaria.getEstado() == 0){
+                //estado.setBackgroundColor(Color.parseColor("FFA500"));
+                estado.setBackgroundColor(Color.parseColor("#FFA500"));
+            }else if(avaria.getEstado() == 1){
+                estado.setBackgroundColor(Color.YELLOW);
+            }
+            else if(avaria.getEstado() == 2){
+                estado.setBackgroundColor(Color.GREEN);
+            }
+            else if(avaria.getEstado() == 3){
+                estado.setBackgroundColor(Color.RED);
+            }
         }
     }
 }
