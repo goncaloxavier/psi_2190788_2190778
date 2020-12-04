@@ -94,12 +94,12 @@ public class AnomalyActivity extends AppCompatActivity implements AdapterView.On
             public void onClick(View v) {
                 if(avaria != null){
                     avaria.setDescricao(edtDescricao.getText().toString());
-                    if(cbFuncional.isSelected()){
-                        avaria.setGravidade(1);
-                    }else{
+                    if(cbFuncional.isChecked()){
                         avaria.setGravidade(0);
+                    }else{
+                        avaria.setGravidade(1);
                     }
-                    if(cbHardware.isSelected()){
+                    if(cbHardware.isChecked()){
                         avaria.setTipo(0);
                     }else{
                         avaria.setTipo(1);
@@ -110,12 +110,12 @@ public class AnomalyActivity extends AppCompatActivity implements AdapterView.On
                 }else{
                     int gravidade = 0;
                     int tipo = 0;
-                    if(cbFuncional.isSelected()){
+                    if(cbFuncional.isChecked()){
                         gravidade = 1;
                     }else{
                         gravidade = 0;
                     }
-                    if(cbHardware.isSelected()){
+                    if(cbHardware.isChecked()){
                        tipo = 0;
                     }else{
                         tipo = 1;
