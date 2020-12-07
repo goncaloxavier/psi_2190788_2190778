@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         fragmentManager = getSupportFragmentManager();
         bottomNavigationView.setSelectedItemId(R.id.minhasAvarias);
+        carregarFragmentoInicial();
     }
     public boolean onNavigationItemSelected(MenuItem item) {
         Fragment fragment = null;
@@ -54,5 +55,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
         }
         return true;
+    }
+
+    private void carregarFragmentoInicial(){
+        Fragment fragment = new ListaAvariasFragment();
+        if(fragment != null){
+            fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+        }
     }
 }
