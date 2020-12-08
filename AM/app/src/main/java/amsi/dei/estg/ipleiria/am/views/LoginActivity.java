@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import amsi.dei.estg.ipleiria.am.MainActivity;
 import amsi.dei.estg.ipleiria.am.R;
 
 public class LoginActivity extends AppCompatActivity {
@@ -29,8 +30,7 @@ public class LoginActivity extends AppCompatActivity {
 
         System.out.println("--> Username: " + username + "  Password: " + password);
 
-        Intent intent = new Intent(this, HomeActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
-
     }
 }

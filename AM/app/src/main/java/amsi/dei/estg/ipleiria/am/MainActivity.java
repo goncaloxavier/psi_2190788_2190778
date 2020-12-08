@@ -1,8 +1,6 @@
 package amsi.dei.estg.ipleiria.am;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -12,11 +10,10 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationView;
 
+import amsi.dei.estg.ipleiria.am.fragments.ListaAvariasFragment;
 import amsi.dei.estg.ipleiria.am.views.AnomalyActivity;
-import amsi.dei.estg.ipleiria.am.views.AnomalyListActivity;
-import amsi.dei.estg.ipleiria.am.views.VerifyAnomalyActivity;
+import amsi.dei.estg.ipleiria.am.fragments.ProfileFragment;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
@@ -49,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 fragment = new ListaAvariasFragment();
                 break;
             case R.id.profile:
+                fragment = new ProfileFragment();
                 break;
         }
         if(fragment != null){

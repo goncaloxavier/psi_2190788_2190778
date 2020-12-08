@@ -1,4 +1,4 @@
-package amsi.dei.estg.ipleiria.am;
+package amsi.dei.estg.ipleiria.am.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,6 +18,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
+import amsi.dei.estg.ipleiria.am.R;
 import amsi.dei.estg.ipleiria.am.adaptors.ListaAvariasAdaptor;
 import amsi.dei.estg.ipleiria.am.models.Avaria;
 import amsi.dei.estg.ipleiria.am.models.SingletonGestorAvarias;
