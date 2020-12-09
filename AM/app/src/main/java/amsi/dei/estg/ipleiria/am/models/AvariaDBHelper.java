@@ -89,7 +89,7 @@ public class AvariaDBHelper extends SQLiteOpenHelper {
 
         Cursor cursor = this.sqLiteDatabase.query(TABLE_NAME, new String[]{
                         ID_AVARIA, DESCRICAO_AVARIA, ESTADO_AVARIA, TIPO_AVARIA, GRAVIDADE_AVARIA, DISPOSITIVO_AVARIA, DESCRICAO_AVARIA, DATA_AVARIA},
-                null, null, null, null, null);
+                ESTADO_AVARIA + " IN (3,2,1,0)", null, null, null, ESTADO_AVARIA);
 
         if(cursor.moveToFirst()){
             do{

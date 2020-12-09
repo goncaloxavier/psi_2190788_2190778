@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         bottomNavigationView = (BottomNavigationView)findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         fragmentManager = getSupportFragmentManager();
-        bottomNavigationView.setSelectedItemId(R.id.minhasAvarias);
         carregarFragmentoInicial();
     }
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -56,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     private void carregarFragmentoInicial(){
+        bottomNavigationView.setSelectedItemId(R.id.minhasAvarias);
         Fragment fragment = new ListaAvariasFragment();
         if(fragment != null){
             fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
