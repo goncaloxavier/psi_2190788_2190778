@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".fragments.EstatisticaFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right">
+
+        <TextView
+            android:id="@+id/txt_Avarias"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Numero de Avarias" />
+
+        <Space
+            android:layout_width="100dp"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/txt_NumAvarias"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
+
+        <Space
+            android:layout_width="20dp"
+            android:layout_height="match_parent" />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right|center_vertical">
+
+        <TextView
+            android:id="@+id/txt_Pecas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="Custo de Peças(Total)" />
+
+        <Space
+            android:layout_width="100dp"
+            android:layout_height="match_parent" />
+
+
+        <TextView
+            android:id="@+id/txt_NumPecas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
+        <Space
+            android:layout_width="20dp"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right">
+
+        <TextView
+            android:id="@+id/txt_AvariasResolvidas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Avarias Resolvidas" />
+
+        <Space
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0" />
+
+
+        <TextView
+            android:id="@+id/txt_NumAvariasResolvidas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
+        <Space
+            android:layout_width="20dp"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right">
+
+        <TextView
+            android:id="@+id/txt_AvariasNaoResolvidas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Avarias Nao Resolvidas" />
+
+        <Space
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0" />
+
+
+        <TextView
+            android:id="@+id/txt_NumAvariasNaoResolvidas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
+        <Space
+            android:layout_width="20dp"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right">
+
+        <TextView
+            android:id="@+id/txt_DispositivosFuncionais"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dispostivos Funcionais" />
+
+        <Space
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0" />
+
+
+        <TextView
+            android:id="@+id/txt_NumDispositivosFuncionais"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
+        <Space
+            android:layout_width="20dp"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right">
+
+        <TextView
+            android:id="@+id/txt_DispostivosNaoFuncionais"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dispositivos Nao Funcionais" />
+
+        <Space
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0" />
+
+
+        <TextView
+            android:id="@+id/txt_NumDispostivosNaoFuncionais"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:text="TextView" />
+
+        <Space
+            android:layout_width="20dp"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+</LinearLayout>
