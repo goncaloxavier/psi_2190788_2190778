@@ -11,6 +11,7 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import amsi.dei.estg.ipleiria.am.fragments.EstatisticaFragment;
 import amsi.dei.estg.ipleiria.am.fragments.ListaAvariasFragment;
 import amsi.dei.estg.ipleiria.am.views.AnomalyActivity;
 import amsi.dei.estg.ipleiria.am.fragments.ProfileFragment;
@@ -36,10 +37,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public boolean onNavigationItemSelected(MenuItem item) {
         Fragment fragment = null;
         switch (item.getItemId()){
-            case R.id.verificar:
-                break;
-            case R.id.avaria:
-                startActivity(new Intent(getApplicationContext(), AnomalyActivity.class));
+            case R.id.estatistica:
+                fragment = new EstatisticaFragment();
                 break;
             case R.id.minhasAvarias:
                 fragment = new ListaAvariasFragment();

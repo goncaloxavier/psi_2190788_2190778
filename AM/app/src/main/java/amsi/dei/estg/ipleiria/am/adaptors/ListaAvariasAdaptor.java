@@ -82,15 +82,15 @@ public class ListaAvariasAdaptor extends BaseAdapter {
             }
             if(avaria.getEstado() == 0){
                 //estado.setBackgroundColor(Color.parseColor("FFA500"));
-                estado.setBackgroundColor(Color.parseColor("#FFA500"));
+                estado.setBackgroundColor(Color.RED);
             }else if(avaria.getEstado() == 1){
-                estado.setBackgroundColor(Color.YELLOW);
+                estado.setBackgroundColor(Color.parseColor("#FFA500"));
             }
             else if(avaria.getEstado() == 2){
-                estado.setBackgroundColor(Color.GREEN);
+                estado.setBackgroundColor(Color.YELLOW);
             }
             else if(avaria.getEstado() == 3){
-                estado.setBackgroundColor(Color.RED);
+                estado.setBackgroundColor(Color.GREEN);
             }
         }
     }

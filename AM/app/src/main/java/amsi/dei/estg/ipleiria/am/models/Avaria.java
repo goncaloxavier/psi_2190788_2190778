@@ -65,8 +65,8 @@ public class Avaria {
         this.date = date;
     }
 
-    public Avaria(int estado, int gravidade, int tipo, int idDispositivo, String date, String descricao) {
-        this.idAvaria = autoIncrementId++;
+    public Avaria(int id, int estado, int gravidade, int tipo, int idDispositivo, String date, String descricao) {
+        this.idAvaria = id;
         this.estado = estado;
         this.gravidade = gravidade;
         this.idDispositivo = idDispositivo;

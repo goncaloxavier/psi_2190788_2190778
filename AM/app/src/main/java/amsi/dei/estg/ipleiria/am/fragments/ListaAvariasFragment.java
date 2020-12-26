@@ -14,21 +14,24 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
 import amsi.dei.estg.ipleiria.am.R;
 import amsi.dei.estg.ipleiria.am.adaptors.ListaAvariasAdaptor;
+import amsi.dei.estg.ipleiria.am.listeners.AvariasListener;
 import amsi.dei.estg.ipleiria.am.models.Avaria;
 import amsi.dei.estg.ipleiria.am.models.SingletonGestorAvarias;
 import amsi.dei.estg.ipleiria.am.views.AnomalyActivity;
 
-public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, AvariasListener {
 
     private ListView lvListaAvarias;
     private ArrayList<Avaria> listaAvarias;
     SwipeRefreshLayout swipeRefreshLayout;
+    private FloatingActionButton fab;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,9 +39,8 @@ public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout
         setHasOptionsMenu(true);
         View rootview = inflater.inflate(R.layout.fragment_lista_avarias, container, false);
 
-        listaAvarias = SingletonGestorAvarias.getInstance(getContext()).getAvariasDB();
         lvListaAvarias = rootview.findViewById(R.id.lvListaAvarias);
-        lvListaAvarias.setAdapter(new ListaAvariasAdaptor(getContext(),listaAvarias));
+        fab = rootview.findViewById(R.id.fab_avaria);
 
         lvListaAvarias.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -50,8 +52,19 @@ public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout
             }
         });
 
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), AnomalyActivity.class);
+                startActivityForResult(intent, AnomalyActivity.ADICIONAR);
+            }
+        });
+
         swipeRefreshLayout = rootview.findViewById(R.id.swipe);
         swipeRefreshLayout.setOnRefreshListener(this);
+
+        SingletonGestorAvarias.getInstance(getContext()).setAvariasListener(this);
+        SingletonGestorAvarias.getInstance(getContext()).getAllAvariasAPI(getContext());
 
         return rootview;
     }
@@ -76,8 +89,19 @@ public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout
 
     @Override
     public void onRefresh() {
-        listaAvarias = SingletonGestorAvarias.getInstance(getContext()).getAvariasDB();
-        lvListaAvarias.setAdapter(new ListaAvariasAdaptor(getContext(), listaAvarias));
+        SingletonGestorAvarias.getInstance(getContext()).getAllAvariasAPI(getContext());
         swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onRefreshListaAvarias(ArrayList<Avaria> listaAvaria) {
+        if(listaAvaria != null){
+            lvListaAvarias.setAdapter(new ListaAvariasAdaptor(getContext(), listaAvaria));
+        }
+    }
+
+    @Override
+    public void onUpdateListaAvarias(Avaria avaria, int operacao) {
+
     }
 }

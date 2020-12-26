@@ -84,19 +84,21 @@ public class AvariaDBHelper extends SQLiteOpenHelper {
         return (this.sqLiteDatabase.delete(TABLE_NAME, "id = ?", new String[]{"" + idAvaria}) == 1);
     }
 
+    public void removerAllAvariasDB(){
+        this.sqLiteDatabase.delete(TABLE_NAME, null, null);
+    }
+
     public ArrayList<Avaria> getAllAvariasDB(){
         ArrayList<Avaria> avarias = new ArrayList<>();
 
         Cursor cursor = this.sqLiteDatabase.query(TABLE_NAME, new String[]{
-                        ID_AVARIA, DESCRICAO_AVARIA, ESTADO_AVARIA, TIPO_AVARIA, GRAVIDADE_AVARIA, DISPOSITIVO_AVARIA, DESCRICAO_AVARIA, DATA_AVARIA},
+                        ID_AVARIA, ESTADO_AVARIA, TIPO_AVARIA, GRAVIDADE_AVARIA, DISPOSITIVO_AVARIA, DESCRICAO_AVARIA, DATA_AVARIA},
                 ESTADO_AVARIA + " IN (3,2,1,0)", null, null, null, ESTADO_AVARIA);
 
         if(cursor.moveToFirst()){
             do{
-                Avaria auxAvaria = new Avaria(cursor.getInt(2), cursor.getInt(4),
-                        cursor.getInt(3), cursor.getInt(5), cursor.getString(7), cursor.getString(6));
-
-                auxAvaria.setIdAvaria(cursor.getInt(0));
+                Avaria auxAvaria = new Avaria(cursor.getInt(0), cursor.getInt(1), cursor.getInt(3),
+                        cursor.getInt(2), cursor.getInt(4), cursor.getString(6), cursor.getString(5));
 
                 avarias.add(auxAvaria);
             }while(cursor.moveToNext());

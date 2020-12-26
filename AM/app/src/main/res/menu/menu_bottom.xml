@@ -2,13 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:title="Estatistica"
-        android:id="@+id/verificar"
+        android:id="@+id/estatistica"
         android:icon="@drawable/ic_estatistica_foreground"
-        />
-    <item
-        android:title="Avaria"
-        android:id="@+id/avaria"
-        android:icon="@drawable/ic_add_foreground"
         />
     <item
         android:title="Avarias"

@@ -120,9 +120,7 @@ public class AnomalyActivity extends AppCompatActivity implements AdapterView.On
                     }else{
                         tipo = 1;
                     }
-                    Avaria auxAvaria = new Avaria(0, gravidade, tipo,
-                            Integer.parseInt(edtIdDispositivo.getText().toString()), "2020",
-                            edtDescricao.getText().toString());
+                    Avaria auxAvaria = new Avaria(0, 0, gravidade,  tipo, Integer.parseInt(edtIdDispositivo.getText().toString()), "2020", edtDescricao.getText().toString());
 
                     SingletonGestorAvarias.getInstance(getApplicationContext()).adicionarAvariaDB(auxAvaria);
                 }
