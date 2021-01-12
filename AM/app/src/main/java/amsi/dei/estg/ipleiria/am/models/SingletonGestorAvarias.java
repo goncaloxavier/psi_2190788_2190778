@@ -1,6 +1,8 @@
 package amsi.dei.estg.ipleiria.am.models;
 
 import android.content.Context;
+import android.util.Base64;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -40,10 +42,12 @@ public class SingletonGestorAvarias implements AvariasListener {
     private static final int ADICIONAR_DB = 1;
     private static final int REMOVER_DB = 3;
 
-    private static final String mUrlAPIAvarias = "http://192.168.0.15:8080/avarias";
-    private static final String mUrlAPIAvariasOrd = "http://192.168.0.15:8080/avarias/ordered/";
-    private static final String mUrlAPIDispositivos = "http://192.168.0.15:8080/dispositivos";
-    private static final String mUrlAPIEstatistica = "http://192.168.0.15:8080/relatorios/estatistica";
+    private static final String mUrlAPIAvarias = "http://10.200.19.183:8080/avarias";
+    private static final String mUrlAPIAvariasOrd = "http://10.200.19.183:8080/avarias/ordered/";
+    private static final String mUrlAPIDispositivos = "http://10.200.19.183:8080/dispositivos";
+    private static final String mUrlAPIEstatistica = "http://10.200.19.183:8080/relatorios/estatistica";
+    private static final String mUrlAPILogin = "http://10.200.19.183:8080/avarias";
+
 
     public static synchronized  SingletonGestorAvarias getInstance(Context context){
         if(instance == null){
@@ -53,7 +57,7 @@ public class SingletonGestorAvarias implements AvariasListener {
         return instance;
     }
 
-    private SingletonGestorAvarias(Context context){
+    public SingletonGestorAvarias(Context context){
         avariaDBHelper = new AvariaDBHelper(context);
     }
 
@@ -200,7 +204,7 @@ public class SingletonGestorAvarias implements AvariasListener {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     System.out.println(error.getMessage());
-                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                  //// Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
             volleyQueue.add(request);
@@ -328,5 +332,36 @@ public class SingletonGestorAvarias implements AvariasListener {
             case REMOVER_DB:
                 removerAvariaDB(avaria.getIdAvaria());
         }
+    }
+
+    public void loginA(final String username, final String password, final Context context){
+        final StringRequest request = new StringRequest(Request.Method.POST, mUrlAPIAvarias, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (!response.equals(null)) {
+                    Log.e("Your Array Response", response);
+                } else {
+                    Log.e("Your Array Response", "Data Null");
+                }
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("error is ", "" + error);
+            }
+        }) {
+
+            //This is for Headers If You Needed
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<String, String>();
+                String creds = String.format("%s:%s",username,password);
+                String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
+                params.put("Authorization", auth);
+                return params;
+            }
+        };
+        volleyQueue.add(request);
     }
 }

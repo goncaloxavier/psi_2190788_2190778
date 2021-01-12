@@ -10,14 +10,17 @@ import android.widget.EditText;
 
 import amsi.dei.estg.ipleiria.am.MainActivity;
 import amsi.dei.estg.ipleiria.am.R;
+import amsi.dei.estg.ipleiria.am.models.SingletonGestorAvarias;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText edtUsername, edtPassword;
     private Button btnLogin;
+    private SingletonGestorAvarias singletonGestorAvarias;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        singletonGestorAvarias = new SingletonGestorAvarias(getApplicationContext());
 
         edtUsername = findViewById(R.id.edtUsername);
         edtPassword = findViewById(R.id.edtPassword);
@@ -27,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onClickLogin(View view) {
         String username = edtUsername.getText().toString();
         String password = edtPassword.getText().toString();
+     ///   singletonGestorAvarias.loginA(username,password,getApplicationContext());
 
         System.out.println("--> Username: " + username + "  Password: " + password);
 
