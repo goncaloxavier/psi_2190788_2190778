@@ -6,9 +6,11 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string-array name="estados">
-        <item>"Starvation"</item>
         <item>"Nao Resolvido"</item>
         <item>"Em Resolucao"</item>
         <item>"Resolvido"</item>
+    </string-array>
+    <string-array name="referencias">
+        <item>"NULL"</item>
     </string-array>
 </resources>

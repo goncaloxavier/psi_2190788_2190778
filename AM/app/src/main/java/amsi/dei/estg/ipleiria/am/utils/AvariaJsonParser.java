@@ -14,7 +14,7 @@ import amsi.dei.estg.ipleiria.am.models.Avaria;
 
 public class AvariaJsonParser {
 
-    public static ArrayList<Avaria> parserJsonAvaria(JSONArray response){
+    public static ArrayList<Avaria> parserJsonAvarias(JSONArray response){
         ArrayList<Avaria> listaAvaria = new ArrayList<>();
 
         try{
@@ -25,10 +25,11 @@ public class AvariaJsonParser {
                 int tipo = avaria.getInt("tipo");
                 int gravidade = avaria.getInt("gravidade");
                 int idDispositivo = avaria.getInt("idDispositivo");
+                int idUtilizador = avaria.getInt("idUtilizador");
                 String descricao = avaria.getString("descricao");
                 String data = avaria.getString("data");
 
-                Avaria auxAvaria = new Avaria(idAvaria, estado, gravidade, tipo, idDispositivo, data, descricao);
+                Avaria auxAvaria = new Avaria(idAvaria, estado, gravidade, tipo, idDispositivo, data, descricao,idUtilizador);
                 listaAvaria.add(auxAvaria);
             }
         }catch (JSONException e){
@@ -36,6 +37,28 @@ public class AvariaJsonParser {
         }
 
         return listaAvaria;
+    }
+
+    public static Avaria parserJsonAvaria(String response){
+        Avaria auxAvaria = null;
+
+        try{
+            JSONObject avaria = new JSONObject(response);
+            int idAvaria = avaria.getInt("idAvaria");
+            int estado = avaria.getInt("estado");
+            int tipo = avaria.getInt("tipo");
+            int gravidade = avaria.getInt("gravidade");
+            int idDispositivo = avaria.getInt("idDispositivo");
+            int idUtilizador = avaria.getInt("idUtilizador");
+            String descricao = avaria.getString("descricao");
+            String data = avaria.getString("data");
+
+            auxAvaria = new Avaria(idAvaria, estado, gravidade, tipo, idDispositivo, data, descricao,idUtilizador);
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        return auxAvaria;
     }
 
     public static String parserJsonLogin(String response){

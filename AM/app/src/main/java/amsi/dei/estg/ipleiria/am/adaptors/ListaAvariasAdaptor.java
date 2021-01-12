@@ -27,7 +27,12 @@ public class ListaAvariasAdaptor extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return avarias.size();
+        int size = 0;
+        if(avarias != null){
+            size = avarias.size();
+        }
+
+        return size;
     }
 
     @Override
@@ -80,17 +85,16 @@ public class ListaAvariasAdaptor extends BaseAdapter {
             }else{
                 tipo.setText("Software");
             }
-            if(avaria.getEstado() == 0){
-                //estado.setBackgroundColor(Color.parseColor("FFA500"));
-                estado.setBackgroundColor(Color.RED);
-            }else if(avaria.getEstado() == 1){
-                estado.setBackgroundColor(Color.parseColor("#FFA500"));
-            }
-            else if(avaria.getEstado() == 2){
-                estado.setBackgroundColor(Color.YELLOW);
-            }
-            else if(avaria.getEstado() == 3){
-                estado.setBackgroundColor(Color.GREEN);
+            switch (avaria.getEstado()){
+                case 0:
+                    estado.setBackgroundColor(Color.parseColor("#FFA500"));
+                    break;
+                case 1:
+                    estado.setBackgroundColor(Color.YELLOW);
+                    break;
+                case 2:
+                    estado.setBackgroundColor(Color.GREEN);
+                    break;
             }
         }
     }

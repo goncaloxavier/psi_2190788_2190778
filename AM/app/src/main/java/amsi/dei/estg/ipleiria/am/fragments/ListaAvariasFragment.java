@@ -24,6 +24,7 @@ import amsi.dei.estg.ipleiria.am.adaptors.ListaAvariasAdaptor;
 import amsi.dei.estg.ipleiria.am.listeners.AvariasListener;
 import amsi.dei.estg.ipleiria.am.models.Avaria;
 import amsi.dei.estg.ipleiria.am.models.SingletonGestorAvarias;
+import amsi.dei.estg.ipleiria.am.utils.AvariaJsonParser;
 import amsi.dei.estg.ipleiria.am.views.AnomalyActivity;
 
 public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, AvariasListener {
@@ -46,6 +47,7 @@ public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Avaria temAvaria = (Avaria) parent.getItemAtPosition(position);
+                System.out.println("JAVARDAO" + position);
                 Intent intent = new Intent(getContext(), AnomalyActivity.class);
                 intent.putExtra(AnomalyActivity.AVARIA, temAvaria.getIdAvaria());
                 startActivityForResult(intent, AnomalyActivity.EDITAR);
@@ -65,6 +67,7 @@ public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout
 
         SingletonGestorAvarias.getInstance(getContext()).setAvariasListener(this);
         SingletonGestorAvarias.getInstance(getContext()).getAllAvariasAPI(getContext());
+        SingletonGestorAvarias.getInstance(getContext()).getAllDispositivosAPI(getContext());
 
         return rootview;
     }
@@ -74,12 +77,12 @@ public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout
         if (resultCode == Activity.RESULT_OK){
             switch (requestCode){
                 case AnomalyActivity.ADICIONAR:
-                    listaAvarias = SingletonGestorAvarias.getInstance(getContext()).getAvariasDB();
+                    SingletonGestorAvarias.getInstance(getContext()).getAllAvariasAPI(getContext());
                     lvListaAvarias.setAdapter(new ListaAvariasAdaptor(getContext(), listaAvarias));
                     Snackbar.make(getView(), "Avaria adicionada com sucesso", Snackbar.LENGTH_LONG).show();
                     break;
                 case AnomalyActivity.EDITAR:
-                    listaAvarias = SingletonGestorAvarias.getInstance(getContext()).getAvariasDB();
+                    SingletonGestorAvarias.getInstance(getContext()).getAllAvariasAPI(getContext());
                     lvListaAvarias.setAdapter(new ListaAvariasAdaptor(getContext(), listaAvarias));
                     Snackbar.make(getView(), "Avaria modificada com sucesso", Snackbar.LENGTH_LONG).show();
                     break;
@@ -89,7 +92,11 @@ public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout
 
     @Override
     public void onRefresh() {
-        SingletonGestorAvarias.getInstance(getContext()).getAllAvariasAPI(getContext());
+
+            SingletonGestorAvarias.getInstance(getContext()).getAllAvariasAPI(getContext());
+            SingletonGestorAvarias.getInstance(getContext()).getAllDispositivosAPI(getContext());
+
+
         swipeRefreshLayout.setRefreshing(false);
     }
 

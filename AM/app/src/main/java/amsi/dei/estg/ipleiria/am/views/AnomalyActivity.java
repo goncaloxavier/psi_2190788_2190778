@@ -22,21 +22,31 @@ import android.widget.TextView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.lang.reflect.Array;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 import amsi.dei.estg.ipleiria.am.R;
 import amsi.dei.estg.ipleiria.am.models.Avaria;
+import amsi.dei.estg.ipleiria.am.models.Dispositivo;
 import amsi.dei.estg.ipleiria.am.models.SingletonGestorAvarias;
 
-public class AnomalyActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class AnomalyActivity extends AppCompatActivity  {
 
     public static final String AVARIA = "avaria";
     public static final int ADICIONAR = 1;
     public static final int EDITAR = 2;
-    private int idAvaria, spinnerPosition;
+    private int idAvaria, positionE, positionD;
     private Avaria avaria;
+    private ArrayList<Dispositivo> dispositivos;
     private TextView tvEstadoEdit;
-    private EditText edtDescricao, edtIdDispositivo;
+    private EditText edtDescricao;
     private CheckBox cbHardware, cbSoftware, cbFuncional, cbNFuncional;
-    private Spinner spinnerEstado;
+    private Spinner spinnerEstado, spinnerDispositivo;
     private FloatingActionButton fab;
 
     @Override
@@ -45,27 +55,51 @@ public class AnomalyActivity extends AppCompatActivity implements AdapterView.On
         setContentView(R.layout.activity_anomaly);
 
         idAvaria = getIntent().getIntExtra(AVARIA, -1);
+        SingletonGestorAvarias.getInstance(getApplicationContext()).getAvariasDB();
         avaria = SingletonGestorAvarias.getInstance(getApplicationContext()).getAvaria(idAvaria);
+        dispositivos = SingletonGestorAvarias.getInstance(getApplicationContext()).getDispositivosDB();
 
         edtDescricao = findViewById(R.id.mvDescricao);
-        edtIdDispositivo = findViewById(R.id.edtIdDispositivo);
         cbHardware = findViewById(R.id.cbHardware);
         cbSoftware = findViewById(R.id.cbSoftware);
         cbFuncional = findViewById(R.id.cbFuncional);
         cbNFuncional = findViewById(R.id.cbNFuncional);
         spinnerEstado = findViewById(R.id.spinnerEstado);
+        spinnerDispositivo = findViewById(R.id.spinnerDispositivo);
         tvEstadoEdit = findViewById(R.id.tvEstadoEdit);
         fab = findViewById(R.id.fab_avaria);
 
+
+        spinnerDispositivo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                positionD = position;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+
+        spinnerEstado.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                positionE = position;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+
         if(avaria != null){
-            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.estados, android.R.layout.simple_spinner_item);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinnerEstado.setAdapter(adapter);
-            spinnerEstado.setOnItemSelectedListener(this);
-            spinnerEstado.setVisibility(View.VISIBLE);
-            spinnerEstado.setSelection(avaria.getEstado());
+
             edtDescricao.setText(avaria.getDescricao());
-            edtIdDispositivo.setText(String.valueOf(avaria.getIdDispositivo()));
+            //edtIdDispositivo.setText(String.valueOf(avaria.getIdDispositivo()));
             if(avaria.getTipo() == 0){
                 cbHardware.setChecked(true);
                 cbSoftware.setChecked(false);
@@ -73,7 +107,7 @@ public class AnomalyActivity extends AppCompatActivity implements AdapterView.On
                 cbHardware.setChecked(false);
                 cbSoftware.setChecked(true);
             }
-            if(avaria.getGravidade() == 0){
+            if(avaria.getGravidade() == 1){
                 cbFuncional.setChecked(true);
                 cbNFuncional.setChecked(false);
             }else{
@@ -81,11 +115,17 @@ public class AnomalyActivity extends AppCompatActivity implements AdapterView.On
                 cbNFuncional.setChecked(true);
             }
             fab.setImageResource(R.drawable.ic_guardar_foreground);
+            spinnerDispositivo.setVisibility(View.VISIBLE);
+            spinnerEstado.setVisibility(View.VISIBLE);
+            setSpinnerEstado();
+            setSpinnerDispositivo();
         }
         else{
             setTitle("Adicionar Avaria");
             tvEstadoEdit.setVisibility(View.GONE);
             spinnerEstado.setVisibility(View.GONE);
+            spinnerDispositivo.setVisibility(View.VISIBLE);
+            setSpinnerDispositivo();
             fab.setImageResource(R.drawable.ic_adicionar_foreground);
         }
 
@@ -104,10 +144,14 @@ public class AnomalyActivity extends AppCompatActivity implements AdapterView.On
                     }else{
                         avaria.setTipo(1);
                     }
-                    avaria.setEstado(spinnerPosition);
-                    avaria.setIdDispositivo(Integer.parseInt(edtIdDispositivo.getText().toString()));
-                    SingletonGestorAvarias.getInstance(getApplicationContext()).editarAvariaDB(avaria);
+                    setSpinnerEstado();
+                    setSpinnerDispositivo();
+                    avaria.setEstado(positionE);
+                    System.out.println("MEKIE->"+positionD);
+                    avaria.setIdDispositivo(positionD + 1);
+                    SingletonGestorAvarias.getInstance(getApplicationContext()).editarAvariaAPI(avaria, getApplicationContext());
                 }else{
+                    setSpinnerDispositivo();
                     int gravidade = 0;
                     int tipo = 0;
                     if(cbFuncional.isChecked()){
@@ -120,9 +164,16 @@ public class AnomalyActivity extends AppCompatActivity implements AdapterView.On
                     }else{
                         tipo = 1;
                     }
-                    Avaria auxAvaria = new Avaria(0, 0, gravidade,  tipo, Integer.parseInt(edtIdDispositivo.getText().toString()), "2020", edtDescricao.getText().toString());
 
-                    SingletonGestorAvarias.getInstance(getApplicationContext()).adicionarAvariaDB(auxAvaria);
+                    Date currentTime = Calendar.getInstance().getTime();
+                    DateFormat df = new SimpleDateFormat("yyyy/MM/dd  HH:mm");
+                    String sdt = df.format(currentTime);
+                    System.out.println("MEKIE->"+positionD);
+                    positionD = positionD + 1;
+                    System.out.println("MEKIEAFTER->"+positionD);
+                    Avaria auxAvaria = new Avaria(0, 0, gravidade,  tipo, positionD, sdt, edtDescricao.getText().toString(), 1);
+
+                    SingletonGestorAvarias.getInstance(getApplicationContext()).adicionarAvariaAPI(auxAvaria, getApplicationContext());
                 }
                 setResult(RESULT_OK);
                 finish();
@@ -159,7 +210,7 @@ public class AnomalyActivity extends AppCompatActivity implements AdapterView.On
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        SingletonGestorAvarias.getInstance(getApplicationContext()).removerAvariaDB(avaria.getIdAvaria());
+                        SingletonGestorAvarias.getInstance(getApplicationContext()).removerAvariaAPI(avaria, getApplicationContext());
                         setResult(RESULT_OK);
                         finish();
                     }
@@ -173,6 +224,29 @@ public class AnomalyActivity extends AppCompatActivity implements AdapterView.On
                 .setIcon(android.R.drawable.ic_delete)
                 .show();
     }
+
+    public void setSpinnerEstado(){
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.estados, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerEstado.setAdapter(adapter);
+        spinnerEstado.setVisibility(View.VISIBLE);
+        spinnerEstado.setSelection(avaria.getEstado());
+    }
+
+    public void setSpinnerDispositivo(){
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, android.R.id.text1);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerDispositivo.setAdapter(spinnerAdapter);
+        for (Dispositivo dispositivo:dispositivos) {
+            spinnerAdapter.add(dispositivo.getReferencia());
+            System.out.println("HEY->"+dispositivo.getReferencia());
+        }
+        spinnerAdapter.notifyDataSetChanged();
+        if(avaria != null){
+            spinnerDispositivo.setSelection(avaria.getIdDispositivo());
+        }
+    }
+
 
     public void onClickNFuncional(View view) {
         cbFuncional.setChecked(false);
@@ -188,15 +262,5 @@ public class AnomalyActivity extends AppCompatActivity implements AdapterView.On
 
     public void onClickFuncional(View view) {
         cbNFuncional.setChecked(false);
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        spinnerPosition = position;
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
     }
 }

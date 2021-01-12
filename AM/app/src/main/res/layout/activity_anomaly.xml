@@ -41,11 +41,11 @@
                         android:text="Dispositivo"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
-                    <EditText
-                        android:id="@+id/edtIdDispositivo"
+                    <Spinner
+                        android:id="@+id/spinnerDispositivo"
                         android:layout_width="300dp"
                         android:layout_height="wrap_content"
-                        android:inputType="textShortMessage" />
+                        android:layout_weight="1" />
 
                 </LinearLayout>
 
@@ -150,13 +150,12 @@
                     android:orientation="horizontal">
 
                     <CheckBox
-                        android:id="@+id/cbFuncional"
+                        android:id="@+id/cbNFuncional"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0"
                         android:buttonTint="@color/colorPrimaryDark"
-                        android:onClick="onClickFuncional"
-                        android:text="Funcional" />
+                        android:onClick="onClickNFuncional"
+                        android:text="Não Funcional" />
 
                     <Space
                         android:layout_width="40dp"
@@ -164,12 +163,13 @@
                         android:layout_weight="0" />
 
                     <CheckBox
-                        android:id="@+id/cbNFuncional"
+                        android:id="@+id/cbFuncional"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_weight="0"
                         android:buttonTint="@color/colorPrimaryDark"
-                        android:onClick="onClickNFuncional"
-                        android:text="Não Funcional" />
+                        android:onClick="onClickFuncional"
+                        android:text="Funcional" />
 
                 </LinearLayout>
 
