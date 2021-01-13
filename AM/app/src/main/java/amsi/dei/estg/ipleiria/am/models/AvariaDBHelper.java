@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.bumptech.glide.util.Util;
+
 import java.util.ArrayList;
 
 public class AvariaDBHelper extends SQLiteOpenHelper {
@@ -13,6 +15,7 @@ public class AvariaDBHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "amDB";
     private static final String TABLE_NAME_AVARIA = "Avaria";
     private static final String TABLE_NAME_DISPOSITIVO = "Dispositivo";
+    private static final String TABLE_NAME_UTILIZADOR = "Utilizador";
 
     //AVARIA
     private static final String ID_AVARIA = "id";
@@ -31,6 +34,14 @@ public class AvariaDBHelper extends SQLiteOpenHelper {
     private static final String TIPO_DISPOSITIVO = "tipo";
     private static final String ESTADO_DISPOSITIVO = "estado";
     private static final String DATA_DISPOSITIVO = "dataCompra";
+
+    //UTILIZADOR
+    private static final String ID_UTILIZADOR = "id";
+    private static final String NOME_UTILIZADOR = "nomeUtilizador";
+    private static final String PASS_UTILIZADOR = "palavraPasse";
+    private static final String TIPO_UTILIZADOR = "tipo";
+    private static final String ESTADO_UTILIZADOR = "estado";
+    private static final String EMAIL_UTILIZADOR = "email";
 
     private final SQLiteDatabase sqLiteDatabase;
 
@@ -76,6 +87,7 @@ public class AvariaDBHelper extends SQLiteOpenHelper {
     //AVARIA
     public Avaria adicionarAvariaDB(Avaria avaria){
         ContentValues values = new ContentValues();
+        values.put(ID_AVARIA, avaria.getIdAvaria());
         values.put(DESCRICAO_AVARIA, avaria.getDescricao());
         values.put(ESTADO_AVARIA, avaria.getEstado());
         values.put(TIPO_AVARIA, avaria.getTipo());
@@ -121,6 +133,25 @@ public class AvariaDBHelper extends SQLiteOpenHelper {
         Cursor cursor = this.sqLiteDatabase.query(TABLE_NAME_AVARIA, new String[]{
                         ID_AVARIA, ESTADO_AVARIA, TIPO_AVARIA, GRAVIDADE_AVARIA, DISPOSITIVO_AVARIA, DESCRICAO_AVARIA, DATA_AVARIA, UTILIZADOR_AVARIA},
                 ESTADO_AVARIA + " IN (3,2,1,0)", null, null, null, ESTADO_AVARIA);
+
+        if(cursor.moveToFirst()){
+            do{
+                Avaria auxAvaria = new Avaria(cursor.getInt(0), cursor.getInt(1), cursor.getInt(3),
+                        cursor.getInt(2), cursor.getInt(4), cursor.getString(6), cursor.getString(5),  cursor.getInt(7));
+
+                avarias.add(auxAvaria);
+            }while(cursor.moveToNext());
+        }
+
+        return avarias;
+    }
+
+    public ArrayList<Avaria> getAvariasByUserDB(int idUtilizador){
+        ArrayList<Avaria> avarias = new ArrayList<>();
+
+        Cursor cursor = this.sqLiteDatabase.query(TABLE_NAME_AVARIA, new String[]{
+                        ID_AVARIA, ESTADO_AVARIA, TIPO_AVARIA, GRAVIDADE_AVARIA, DISPOSITIVO_AVARIA, DESCRICAO_AVARIA, DATA_AVARIA, UTILIZADOR_AVARIA},
+                ESTADO_AVARIA + " IN (3,2,1,0) " + ID_UTILIZADOR + " =?", new String[]{"" + idUtilizador}, null, null, ESTADO_AVARIA);
 
         if(cursor.moveToFirst()){
             do{

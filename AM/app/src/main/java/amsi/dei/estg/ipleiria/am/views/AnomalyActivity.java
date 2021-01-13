@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -34,6 +35,7 @@ import amsi.dei.estg.ipleiria.am.R;
 import amsi.dei.estg.ipleiria.am.models.Avaria;
 import amsi.dei.estg.ipleiria.am.models.Dispositivo;
 import amsi.dei.estg.ipleiria.am.models.SingletonGestorAvarias;
+import amsi.dei.estg.ipleiria.am.models.Utilizador;
 
 public class AnomalyActivity extends AppCompatActivity  {
 
@@ -43,6 +45,7 @@ public class AnomalyActivity extends AppCompatActivity  {
     private int idAvaria, positionE, positionD;
     private Avaria avaria;
     private ArrayList<Dispositivo> dispositivos;
+    private Utilizador utilizador;
     private TextView tvEstadoEdit;
     private EditText edtDescricao;
     private CheckBox cbHardware, cbSoftware, cbFuncional, cbNFuncional;
@@ -55,9 +58,11 @@ public class AnomalyActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_anomaly);
 
         idAvaria = getIntent().getIntExtra(AVARIA, -1);
-        SingletonGestorAvarias.getInstance(getApplicationContext()).getAvariasDB();
+        SingletonGestorAvarias.getInstance(getApplicationContext()).getAllAvariasAPI(getApplicationContext());
         avaria = SingletonGestorAvarias.getInstance(getApplicationContext()).getAvaria(idAvaria);
-        dispositivos = SingletonGestorAvarias.getInstance(getApplicationContext()).getDispositivosDB();
+        SingletonGestorAvarias.getInstance(getApplicationContext()).getAllDispositivosAPI(getApplicationContext());
+        dispositivos = SingletonGestorAvarias.getInstance(getApplicationContext()).getDispositivos();
+        utilizador = SingletonGestorAvarias.getInstance(getApplicationContext()).getUtilizador();
 
         edtDescricao = findViewById(R.id.mvDescricao);
         cbHardware = findViewById(R.id.cbHardware);
@@ -99,7 +104,7 @@ public class AnomalyActivity extends AppCompatActivity  {
         if(avaria != null){
 
             edtDescricao.setText(avaria.getDescricao());
-            //edtIdDispositivo.setText(String.valueOf(avaria.getIdDispositivo()));
+            System.out.println(avaria.getIdAvaria());
             if(avaria.getTipo() == 0){
                 cbHardware.setChecked(true);
                 cbSoftware.setChecked(false);
@@ -168,10 +173,8 @@ public class AnomalyActivity extends AppCompatActivity  {
                     Date currentTime = Calendar.getInstance().getTime();
                     DateFormat df = new SimpleDateFormat("yyyy/MM/dd  HH:mm");
                     String sdt = df.format(currentTime);
-                    System.out.println("MEKIE->"+positionD);
                     positionD = positionD + 1;
-                    System.out.println("MEKIEAFTER->"+positionD);
-                    Avaria auxAvaria = new Avaria(0, 0, gravidade,  tipo, positionD, sdt, edtDescricao.getText().toString(), 1);
+                    Avaria auxAvaria = new Avaria(0,0, gravidade,  tipo, positionD, sdt, edtDescricao.getText().toString(), utilizador.getIdUtilizador());
 
                     SingletonGestorAvarias.getInstance(getApplicationContext()).adicionarAvariaAPI(auxAvaria, getApplicationContext());
                 }

@@ -43,11 +43,15 @@ public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout
         lvListaAvarias = rootview.findViewById(R.id.lvListaAvarias);
         fab = rootview.findViewById(R.id.fab_avaria);
 
+        SingletonGestorAvarias.getInstance(getContext()).setAvariasListener(this);
+        SingletonGestorAvarias.getInstance(getContext()).getAllAvariasAPI(getContext());
+        SingletonGestorAvarias.getInstance(getContext()).getAllDispositivosAPI(getContext());
+
         lvListaAvarias.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Avaria temAvaria = (Avaria) parent.getItemAtPosition(position);
-                System.out.println("JAVARDAO" + position);
+                System.out.println("JAVARDAO " + temAvaria.getIdAvaria());
                 Intent intent = new Intent(getContext(), AnomalyActivity.class);
                 intent.putExtra(AnomalyActivity.AVARIA, temAvaria.getIdAvaria());
                 startActivityForResult(intent, AnomalyActivity.EDITAR);
@@ -64,10 +68,6 @@ public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout
 
         swipeRefreshLayout = rootview.findViewById(R.id.swipe);
         swipeRefreshLayout.setOnRefreshListener(this);
-
-        SingletonGestorAvarias.getInstance(getContext()).setAvariasListener(this);
-        SingletonGestorAvarias.getInstance(getContext()).getAllAvariasAPI(getContext());
-        SingletonGestorAvarias.getInstance(getContext()).getAllDispositivosAPI(getContext());
 
         return rootview;
     }
@@ -92,10 +92,8 @@ public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout
 
     @Override
     public void onRefresh() {
-
-            SingletonGestorAvarias.getInstance(getContext()).getAllAvariasAPI(getContext());
-            SingletonGestorAvarias.getInstance(getContext()).getAllDispositivosAPI(getContext());
-
+        SingletonGestorAvarias.getInstance(getContext()).getAllAvariasAPI(getContext());
+        SingletonGestorAvarias.getInstance(getContext()).getAllDispositivosAPI(getContext());
 
         swipeRefreshLayout.setRefreshing(false);
     }
@@ -108,7 +106,7 @@ public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout
     }
 
     @Override
-    public void onUpdateListaAvarias(Avaria avaria, int operacao) {
+    public void onUpdateListaAvarias(Avaria avaria, ArrayList avarias, int operacao) {
 
     }
 }
