@@ -46,7 +46,6 @@ public class MyAnomalyListActivityActivity extends AppCompatActivity implements 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Avaria temAvaria = (Avaria) parent.getItemAtPosition(position);
-                System.out.println("JAVARDAO " + temAvaria.getIdAvaria());
                 Intent intent = new Intent(getApplicationContext(), AnomalyActivity.class);
                 intent.putExtra(AnomalyActivity.AVARIA, temAvaria.getIdAvaria());
                 startActivityForResult(intent, AnomalyActivity.EDITAR);
@@ -94,15 +93,5 @@ public class MyAnomalyListActivityActivity extends AppCompatActivity implements 
     @Override
     public void onUpdateListaAvarias(Avaria avaria, ArrayList avarias, int operacao) {
 
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-
-        if(hasFocus == false){
-            setResult(RESULT_OK);
-            finish();
-        }
     }
 }

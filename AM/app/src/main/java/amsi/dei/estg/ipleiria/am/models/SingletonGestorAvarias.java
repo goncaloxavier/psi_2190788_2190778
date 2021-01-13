@@ -48,13 +48,13 @@ public class SingletonGestorAvarias implements AvariasListener, VolleyListener {
 
     private VolleyListener volleyListener;
 
-    private static final String mUrlAPIAvarias = "http://192.168.1.125:8080/avarias";
-    private static final String mUrlAPIAvariasOrd = "http://192.168.1.125:8080/avarias/ordered/";
-    private static final String mUrlAPIDispositivos = "http://192.168.1.125:8080/dispositivos";
-    private static final String mUrlAPIEstatistica = "http://192.168.1.125:8080/relatorios/estatistica";
-    private static final String mUrlAPILogin = "http://192.168.1.125:8080/utilizadores/auth/";
-    private static final String mUrlAvariasByUser = "http://192.168.1.125:8080/avarias/byuser/";
-    private static final String getmUrlAvariasbyRef = "http://192.168.1.125:8080/avarias/byref/";
+    private static final String mUrlAPIAvarias = "http://192.168.1.111:8080/avarias";
+    private static final String mUrlAPIAvariasOrd = "http://192.168.1.111:8080/avarias/ordered/";
+    private static final String mUrlAPIDispositivos = "http://192.168.1.111:8080/dispositivos";
+    private static final String mUrlAPIEstatistica = "http://192.168.1.111:8080/relatorios/estatistica";
+    private static final String mUrlAPILogin = "http://192.168.1.111:8080/utilizadores/auth/";
+    private static final String mUrlAvariasByUser = "http://192.168.1.111:8080/avarias/byuser/";
+    private static final String getmUrlAvariasbyRef = "http://192.168.1.111:8080/avarias/byref/";
 
 
     public static synchronized SingletonGestorAvarias getInstance(Context context){
@@ -92,15 +92,6 @@ public class SingletonGestorAvarias implements AvariasListener, VolleyListener {
 
         return null;
     }
-
-    public ArrayList<Avaria> getAvarias() {
-        if(avarias.size() > 0){
-            return avarias;
-        }
-
-        return null;
-    }
-
 
     public void adicionarAvariaDB(Avaria avaria){ avariaDBHelper.adicionarAvariaDB(avaria); }
 

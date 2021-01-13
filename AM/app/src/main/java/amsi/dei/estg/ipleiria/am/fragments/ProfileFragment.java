@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,6 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootview = inflater.inflate(R.layout.fragment_profile, container, false);
-        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
         tvUsername = rootview.findViewById(R.id.textView3);
         btnMyAnomaly = rootview.findViewById(R.id.btnMyAnomaly);
         Utilizador utilizador = SingletonGestorAvarias.getInstance(getContext()).getUtilizador();
@@ -39,12 +39,17 @@ public class ProfileFragment extends Fragment {
 
         btnMyAnomaly.setOnClickListener(new View.OnClickListener()
         {
+
             @Override
             public void onClick(View v)
             {
-                MainActivity mainActivity = (MainActivity) getActivity();
-                Intent intent = new Intent(mainActivity.getApplicationContext(), MyAnomalyListActivityActivity.class);
-                startActivityForResult(intent, MyAnomalyListActivityActivity.COMEBACK);
+                (new Handler()).postDelayed(this::onClick, 1000);
+
+            }
+
+            private void onClick() {
+                Intent intent = new Intent(getContext(), MyAnomalyListActivityActivity.class);
+                startActivity(intent);
             }
         });
         return rootview;
