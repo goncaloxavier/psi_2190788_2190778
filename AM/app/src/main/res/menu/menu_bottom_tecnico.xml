@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:title="Verficar Avaria"
-        android:id="@+id/verificarAvaria"
+        android:title="Estatistica"
+        android:id="@+id/estatistica"
         android:icon="@drawable/ic_estatistica_foreground"
         />
     <item

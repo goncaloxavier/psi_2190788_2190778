@@ -48,12 +48,13 @@ public class SingletonGestorAvarias implements AvariasListener, VolleyListener {
 
     private VolleyListener volleyListener;
 
-    private static final String mUrlAPIAvarias = "http://192.168.1.111:8080/avarias";
-    private static final String mUrlAPIAvariasOrd = "http://192.168.1.111:8080/avarias/ordered/";
-    private static final String mUrlAPIDispositivos = "http://192.168.1.111:8080/dispositivos";
-    private static final String mUrlAPIEstatistica = "http://192.168.1.111:8080/relatorios/estatistica";
-    private static final String mUrlAPILogin = "http://192.168.1.111:8080/utilizadores/auth/";
-    private static final String mUrlAvariasByUser = "http://192.168.1.111:8080/avarias/byuser/";
+    private static final String mUrlAPIAvarias = "http://192.168.1.125:8080/avarias";
+    private static final String mUrlAPIAvariasOrd = "http://192.168.1.125:8080/avarias/ordered/";
+    private static final String mUrlAPIDispositivos = "http://192.168.1.125:8080/dispositivos";
+    private static final String mUrlAPIEstatistica = "http://192.168.1.125:8080/relatorios/estatistica";
+    private static final String mUrlAPILogin = "http://192.168.1.125:8080/utilizadores/auth/";
+    private static final String mUrlAvariasByUser = "http://192.168.1.125:8080/avarias/byuser/";
+    private static final String getmUrlAvariasbyRef = "http://192.168.1.125:8080/avarias/byref/";
 
 
     public static synchronized SingletonGestorAvarias getInstance(Context context){
@@ -71,6 +72,13 @@ public class SingletonGestorAvarias implements AvariasListener, VolleyListener {
     public ArrayList<Avaria> getAvariasDB() {
         avarias = avariaDBHelper.getAllAvariasDB();
         return avarias;
+    }
+
+    public ArrayList<Avaria> getAvarias() {
+        if(avarias.size() > 0){
+            return avarias;
+        }
+        return null;
     }
 
     public Avaria getAvaria(int idAvaria) {
@@ -344,6 +352,35 @@ public class SingletonGestorAvarias implements AvariasListener, VolleyListener {
                     //Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
+            volleyQueue.add(request);
+        }
+    }
+
+    public void getDispositivobyRef(final Context context, String query){
+        if(!DispositivoJsonParser.isConnectionInternet(context)){
+            Toast.makeText(context, "Nao tem ligacao a rede!!", Toast.LENGTH_SHORT).show();
+        }else{
+            JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, getmUrlAvariasbyRef + query, null, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    avarias = AvariaJsonParser.parserJsonAvarias(response);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    System.out.println(error.getMessage());
+                  ///  Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }){
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> params = new HashMap<String, String>();
+                    String creds = String.format("%s:%s", utilizador.getNomeUtilizador(), utilizador.getPalavraPasse());
+                    String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
+                    params.put("Authorization", auth);
+                    return params;
+                }
+            };
             volleyQueue.add(request);
         }
     }
