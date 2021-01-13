@@ -1,10 +1,12 @@
 package amsi.dei.estg.ipleiria.am.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import amsi.dei.estg.ipleiria.am.MainActivity;
 import amsi.dei.estg.ipleiria.am.R;
 import amsi.dei.estg.ipleiria.am.models.SingletonGestorAvarias;
 import amsi.dei.estg.ipleiria.am.models.Utilizador;
@@ -39,8 +42,9 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v)
             {
-                Intent intent = new Intent(getContext(), MyAnomalyListActivityActivity.class);
-                startActivity(intent);
+                MainActivity mainActivity = (MainActivity) getActivity();
+                Intent intent = new Intent(mainActivity.getApplicationContext(), MyAnomalyListActivityActivity.class);
+                startActivityForResult(intent, MyAnomalyListActivityActivity.COMEBACK);
             }
         });
         return rootview;

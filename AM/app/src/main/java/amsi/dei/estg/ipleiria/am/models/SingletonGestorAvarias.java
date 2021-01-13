@@ -85,6 +85,15 @@ public class SingletonGestorAvarias implements AvariasListener, VolleyListener {
         return null;
     }
 
+    public ArrayList<Avaria> getAvarias() {
+        if(avarias.size() > 0){
+            return avarias;
+        }
+
+        return null;
+    }
+
+
     public void adicionarAvariaDB(Avaria avaria){ avariaDBHelper.adicionarAvariaDB(avaria); }
 
     public void adicionarAvariasDB(ArrayList<Avaria> livros){
@@ -253,13 +262,17 @@ public class SingletonGestorAvarias implements AvariasListener, VolleyListener {
             JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, mUrlAvariasByUser + utilizador.getNomeUtilizador(), null, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
-                    avarias = AvariaJsonParser.parserJsonAvarias(response);
+                    if(response != null){
+                        if(response.length() > 0){
+                            avarias = AvariaJsonParser.parserJsonAvarias(response);
 
-                    if(avariasListener != null){
-                        avariasListener.onRefreshListaAvarias(avarias);
+                            if(avariasListener != null){
+                                avariasListener.onRefreshListaAvarias(avarias);
+                            }
+                        }else{
+                            Toast.makeText(context, "Não tem avarias associadas!", Toast.LENGTH_SHORT).show();
+                        }
                     }
-
-                    System.out.println("--> AVARIAS: " + response);
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -328,7 +341,7 @@ public class SingletonGestorAvarias implements AvariasListener, VolleyListener {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     System.out.println(error.getMessage());
-                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
             volleyQueue.add(request);

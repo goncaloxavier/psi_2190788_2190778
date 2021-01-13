@@ -16,6 +16,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
+import amsi.dei.estg.ipleiria.am.MainActivity;
 import amsi.dei.estg.ipleiria.am.R;
 import amsi.dei.estg.ipleiria.am.adaptors.ListaAvariasAdaptor;
 import amsi.dei.estg.ipleiria.am.listeners.AvariasListener;
@@ -25,6 +26,7 @@ import amsi.dei.estg.ipleiria.am.models.SingletonGestorAvarias;
 public class MyAnomalyListActivityActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, AvariasListener {
     private ListView lvListaAvarias;
     private ArrayList<Avaria> listaAvarias;
+    public static final int COMEBACK = 1;
     SwipeRefreshLayout swipeRefreshLayout;
     private FloatingActionButton fab;
 
@@ -76,7 +78,7 @@ public class MyAnomalyListActivityActivity extends AppCompatActivity implements 
 
     @Override
     public void onRefresh() {
-        SingletonGestorAvarias.getInstance(getApplicationContext()).getAllAvariasAPI(getApplicationContext());
+        SingletonGestorAvarias.getInstance(getApplicationContext()).getAllAvariasUserAPI(getApplicationContext());
         SingletonGestorAvarias.getInstance(getApplicationContext()).getAllDispositivosAPI(getApplicationContext());
 
         swipeRefreshLayout.setRefreshing(false);
@@ -92,5 +94,15 @@ public class MyAnomalyListActivityActivity extends AppCompatActivity implements 
     @Override
     public void onUpdateListaAvarias(Avaria avaria, ArrayList avarias, int operacao) {
 
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        if(hasFocus == false){
+            setResult(RESULT_OK);
+            finish();
+        }
     }
 }
