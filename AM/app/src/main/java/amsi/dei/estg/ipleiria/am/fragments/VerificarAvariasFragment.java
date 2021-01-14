@@ -30,13 +30,19 @@ import java.util.ArrayList;
 import amsi.dei.estg.ipleiria.am.R;
 import amsi.dei.estg.ipleiria.am.adaptors.ListaAvariasAdaptor;
 import amsi.dei.estg.ipleiria.am.listeners.AvariasListener;
+import amsi.dei.estg.ipleiria.am.listeners.DispositivoListener;
+import amsi.dei.estg.ipleiria.am.listeners.UtilizadorListener;
 import amsi.dei.estg.ipleiria.am.models.Avaria;
+import amsi.dei.estg.ipleiria.am.models.Dispositivo;
 import amsi.dei.estg.ipleiria.am.models.SingletonGestorAvarias;
+import amsi.dei.estg.ipleiria.am.models.Utilizador;
 import amsi.dei.estg.ipleiria.am.views.AnomalyActivity;
 
-public class VerificarAvariasFragment extends Fragment{
+public class VerificarAvariasFragment extends Fragment implements AvariasListener, DispositivoListener, UtilizadorListener {
 
     private ListView lvListaAvarias;
+    private ArrayList<Utilizador> utilizadores;
+    private ArrayList<Dispositivo> dispositivos;
     private ArrayList<Avaria> listaAvarias;
     SearchView searchView;
     private FloatingActionButton fab;
@@ -47,17 +53,23 @@ public class VerificarAvariasFragment extends Fragment{
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         View rootview = inflater.inflate(R.layout.fragment_lista_avarias, container, false);
+
         fab = rootview.findViewById(R.id.fab_avaria);
         fab.setVisibility(View.INVISIBLE);
+
         lvListaAvarias = rootview.findViewById(R.id.lvListaAvarias);
+
+        SingletonGestorAvarias.getInstance(getContext()).setAvariasListener(this);
+        SingletonGestorAvarias.getInstance(getContext()).setDispositivoListener(this);
+        SingletonGestorAvarias.getInstance(getContext()).setUtilizadorListener(this);
+
         swipeRefreshLayout = rootview.findViewById(R.id.swipe);
         swipeRefreshLayout.setEnabled(false);
-        SingletonGestorAvarias.getInstance(getContext()).getAllDispositivosAPI(getContext());
+
         lvListaAvarias.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Avaria temAvaria = (Avaria) parent.getItemAtPosition(position);
-                System.out.println("JAVARDAO " + temAvaria.getIdAvaria());
                 Intent intent = new Intent(getContext(), AnomalyActivity.class);
                 intent.putExtra(AnomalyActivity.AVARIA, temAvaria.getIdAvaria());
                 startActivityForResult(intent, AnomalyActivity.EDITAR);
@@ -90,19 +102,10 @@ public class VerificarAvariasFragment extends Fragment{
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                SingletonGestorAvarias.getInstance(getContext()).getDispositivobyRef(getContext(), query);
+                SingletonGestorAvarias.getInstance(getContext()).getAllDispositivosAPI(getContext());
                 SingletonGestorAvarias.getInstance(getContext()).getAllUsersAPI(getContext());
-                (new Handler()).postDelayed(this::waitVolley, 1000);
+                SingletonGestorAvarias.getInstance(getContext()).getDispositivobyRef(getContext(), query);
                 return true;
-            }
-
-            private void waitVolley() {
-                if(SingletonGestorAvarias.getInstance(getContext()).getAvarias() != null){
-                    listaAvarias = SingletonGestorAvarias.getInstance(getContext()).getAvarias();
-                    lvListaAvarias.setAdapter(new ListaAvariasAdaptor(getContext(), listaAvarias));
-                }else{
-                    lvListaAvarias.setAdapter(null);
-                }
             }
 
             @Override
@@ -112,5 +115,29 @@ public class VerificarAvariasFragment extends Fragment{
         });
 
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onRefreshListaAvarias(ArrayList<Avaria> listaAvaria) {
+        if(listaAvaria != null){
+            lvListaAvarias.setAdapter(new ListaAvariasAdaptor(getContext(), listaAvaria));
+        }else{
+            lvListaAvarias.setAdapter(null);
+        }
+    }
+
+    @Override
+    public void onUpdateListaAvarias(Avaria avaria, ArrayList avarias, int operacao) {
+
+    }
+
+    @Override
+    public void onDispositivosRefresh(ArrayList<Dispositivo> dispositivo) {
+
+    }
+
+    @Override
+    public void onUtilizadoresRefresh(ArrayList<Utilizador> utilizador) {
+
     }
 }

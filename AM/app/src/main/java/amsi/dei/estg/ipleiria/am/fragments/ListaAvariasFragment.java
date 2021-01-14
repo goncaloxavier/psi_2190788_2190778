@@ -22,14 +22,20 @@ import java.util.ArrayList;
 import amsi.dei.estg.ipleiria.am.R;
 import amsi.dei.estg.ipleiria.am.adaptors.ListaAvariasAdaptor;
 import amsi.dei.estg.ipleiria.am.listeners.AvariasListener;
+import amsi.dei.estg.ipleiria.am.listeners.DispositivoListener;
+import amsi.dei.estg.ipleiria.am.listeners.UtilizadorListener;
 import amsi.dei.estg.ipleiria.am.models.Avaria;
+import amsi.dei.estg.ipleiria.am.models.Dispositivo;
 import amsi.dei.estg.ipleiria.am.models.SingletonGestorAvarias;
+import amsi.dei.estg.ipleiria.am.models.Utilizador;
 import amsi.dei.estg.ipleiria.am.utils.AvariaJsonParser;
 import amsi.dei.estg.ipleiria.am.views.AnomalyActivity;
 
-public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, AvariasListener {
+public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, AvariasListener, UtilizadorListener, DispositivoListener {
 
     private ListView lvListaAvarias;
+    private ArrayList<Utilizador> utilizadores;
+    private ArrayList<Dispositivo> dispositivos;
     private ArrayList<Avaria> listaAvarias;
     SwipeRefreshLayout swipeRefreshLayout;
     private FloatingActionButton fab;
@@ -44,15 +50,23 @@ public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout
         fab = rootview.findViewById(R.id.fab_avaria);
 
         SingletonGestorAvarias.getInstance(getContext()).setAvariasListener(this);
-        SingletonGestorAvarias.getInstance(getContext()).getAllAvariasAPI(getContext());
-        SingletonGestorAvarias.getInstance(getContext()).getAllUsersAPI(getContext());
-        SingletonGestorAvarias.getInstance(getContext()).getAllDispositivosAPI(getContext());
+        SingletonGestorAvarias.getInstance(getContext()).setDispositivoListener(this);
+        SingletonGestorAvarias.getInstance(getContext()).setUtilizadorListener(this);
+
+        if(SingletonGestorAvarias.getInstance(getContext()).getUtilizador().getTipo() != 0){
+            SingletonGestorAvarias.getInstance(getContext()).getAllUsersAPI(getContext());
+            SingletonGestorAvarias.getInstance(getContext()).getAllDispositivosAPI(getContext());
+            SingletonGestorAvarias.getInstance(getContext()).getAllAvariasAPI(getContext());
+        }else{
+            SingletonGestorAvarias.getInstance(getContext()).getAllUsersAPI(getContext());
+            SingletonGestorAvarias.getInstance(getContext()).getAllDispositivosAPI(getContext());
+            SingletonGestorAvarias.getInstance(getContext()).getAllAvariasUserAPI(getContext());
+        }
 
         lvListaAvarias.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Avaria temAvaria = (Avaria) parent.getItemAtPosition(position);
-                System.out.println("JAVARDAO " + temAvaria.getIdAvaria());
                 Intent intent = new Intent(getContext(), AnomalyActivity.class);
                 intent.putExtra(AnomalyActivity.AVARIA, temAvaria.getIdAvaria());
                 startActivityForResult(intent, AnomalyActivity.EDITAR);
@@ -93,10 +107,15 @@ public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout
 
     @Override
     public void onRefresh() {
-        SingletonGestorAvarias.getInstance(getContext()).getAllAvariasAPI(getContext());
-        SingletonGestorAvarias.getInstance(getContext()).getAllDispositivosAPI(getContext());
-        SingletonGestorAvarias.getInstance(getContext()).getAllUsersAPI(getContext());
-
+        if(SingletonGestorAvarias.getInstance(getContext()).getUtilizador().getTipo() != 0){
+            SingletonGestorAvarias.getInstance(getContext()).getAllUsersAPI(getContext());
+            SingletonGestorAvarias.getInstance(getContext()).getAllDispositivosAPI(getContext());
+            SingletonGestorAvarias.getInstance(getContext()).getAllAvariasAPI(getContext());
+        }else{
+            SingletonGestorAvarias.getInstance(getContext()).getAllUsersAPI(getContext());
+            SingletonGestorAvarias.getInstance(getContext()).getAllDispositivosAPI(getContext());
+            SingletonGestorAvarias.getInstance(getContext()).getAllAvariasUserAPI(getContext());
+        }
         swipeRefreshLayout.setRefreshing(false);
     }
 
@@ -109,6 +128,16 @@ public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout
 
     @Override
     public void onUpdateListaAvarias(Avaria avaria, ArrayList avarias, int operacao) {
+
+    }
+
+    @Override
+    public void onDispositivosRefresh(ArrayList<Dispositivo> dispositivo) {
+
+    }
+
+    @Override
+    public void onUtilizadoresRefresh(ArrayList<Utilizador> utilizador) {
 
     }
 }

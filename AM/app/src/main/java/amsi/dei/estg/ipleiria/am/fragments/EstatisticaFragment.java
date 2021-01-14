@@ -10,10 +10,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import amsi.dei.estg.ipleiria.am.R;
+import amsi.dei.estg.ipleiria.am.listeners.EstatisticaListener;
 import amsi.dei.estg.ipleiria.am.models.Estatistica;
 import amsi.dei.estg.ipleiria.am.models.SingletonGestorAvarias;
 
-public class EstatisticaFragment extends Fragment {
+public class EstatisticaFragment extends Fragment implements EstatisticaListener {
 
     private Estatistica estatistica;
     private TextView txtAvarias, txtDispositivos, txtAvariasRes, txtAvariasNaoRes, txtDispositivosF, txtDispositivosNaoF;
@@ -31,20 +32,18 @@ public class EstatisticaFragment extends Fragment {
         txtDispositivosF = rootview.findViewById(R.id.txt_NumDispositivosFuncionais);
         txtDispositivosNaoF = rootview.findViewById(R.id.txt_NumDispostivosNaoFuncionais);
 
+        SingletonGestorAvarias.getInstance(getContext()).setEstatisticaListener(this);
         SingletonGestorAvarias.getInstance(getContext()).setEstatisticaAPI(getContext());
-        estatistica = SingletonGestorAvarias.getInstance(getContext()).getEstatistica();
 
-        carregarEstatistica();
         return rootview;
     }
 
-    public void carregarEstatistica(){
-        if(estatistica != null){
-            txtAvarias.setText(String.valueOf(estatistica.getNumAvarias()));
-            txtAvariasRes.setText(String.valueOf(estatistica.getNumAvariasR()));
-            txtAvariasNaoRes.setText(String.valueOf(estatistica.getNumAvariasNR()));
-            txtDispositivosF.setText(String.valueOf(estatistica.getNumDispositivosF()));
-            txtDispositivosNaoF.setText(String.valueOf(estatistica.getNumDispositivosNF()));
-        }
+    @Override
+    public void onEstatisticaRefresh(Estatistica estatistica) {
+        txtAvarias.setText(String.valueOf(estatistica.getNumAvarias()));
+        txtAvariasRes.setText(String.valueOf(estatistica.getNumAvariasR()));
+        txtAvariasNaoRes.setText(String.valueOf(estatistica.getNumAvariasNR()));
+        txtDispositivosF.setText(String.valueOf(estatistica.getNumDispositivosF()));
+        txtDispositivosNaoF.setText(String.valueOf(estatistica.getNumDispositivosNF()));
     }
 }

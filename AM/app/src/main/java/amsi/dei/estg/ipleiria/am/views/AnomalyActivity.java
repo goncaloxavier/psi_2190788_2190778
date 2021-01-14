@@ -58,9 +58,7 @@ public class AnomalyActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_anomaly);
 
         idAvaria = getIntent().getIntExtra(AVARIA, -1);
-        SingletonGestorAvarias.getInstance(getApplicationContext()).getAllAvariasAPI(getApplicationContext());
         avaria = SingletonGestorAvarias.getInstance(getApplicationContext()).getAvaria(idAvaria);
-        SingletonGestorAvarias.getInstance(getApplicationContext()).getAllDispositivosAPI(getApplicationContext());
         dispositivos = SingletonGestorAvarias.getInstance(getApplicationContext()).getDispositivos();
         utilizador = SingletonGestorAvarias.getInstance(getApplicationContext()).getUtilizador();
 
@@ -102,7 +100,6 @@ public class AnomalyActivity extends AppCompatActivity  {
         });
 
         if(avaria != null){
-
             edtDescricao.setText(avaria.getDescricao());
             System.out.println(avaria.getIdAvaria());
             if(avaria.getTipo() == 0){
@@ -140,9 +137,9 @@ public class AnomalyActivity extends AppCompatActivity  {
                 if(avaria != null){
                     avaria.setDescricao(edtDescricao.getText().toString());
                     if(cbFuncional.isChecked()){
-                        avaria.setGravidade(0);
-                    }else{
                         avaria.setGravidade(1);
+                    }else{
+                        avaria.setGravidade(0);
                     }
                     if(cbHardware.isChecked()){
                         avaria.setTipo(0);
@@ -152,7 +149,6 @@ public class AnomalyActivity extends AppCompatActivity  {
                     setSpinnerEstado();
                     setSpinnerDispositivo();
                     avaria.setEstado(positionE);
-                    System.out.println("MEKIE->"+positionD);
                     avaria.setIdDispositivo(positionD + 1);
                     SingletonGestorAvarias.getInstance(getApplicationContext()).editarAvariaAPI(avaria, getApplicationContext());
                 }else{
@@ -242,7 +238,6 @@ public class AnomalyActivity extends AppCompatActivity  {
         spinnerDispositivo.setAdapter(spinnerAdapter);
         for (Dispositivo dispositivo:dispositivos) {
             spinnerAdapter.add(dispositivo.getReferencia());
-            System.out.println("HEY->"+dispositivo.getReferencia());
         }
         spinnerAdapter.notifyDataSetChanged();
         if(avaria != null){

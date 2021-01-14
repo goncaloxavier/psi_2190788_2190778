@@ -13,10 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".views.MyAnomalyListActivity"
-            android:parentActivityName= ".MainActivity"
-        />
-        <activity android:name=".views.RelatorioActivity" />
         <activity android:name=".views.AnomalyListActivity" />
         <activity android:name=".views.VerifyAnomalyActivity" />
         <activity android:name=".MainActivity" />

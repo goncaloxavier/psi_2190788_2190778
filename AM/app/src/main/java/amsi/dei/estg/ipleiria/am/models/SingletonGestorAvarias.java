@@ -1,13 +1,11 @@
 package amsi.dei.estg.ipleiria.am.models;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Handler;
 import android.util.Base64;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -26,13 +24,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import amsi.dei.estg.ipleiria.am.listeners.AvariasListener;
-import amsi.dei.estg.ipleiria.am.listeners.VolleyListener;
+import amsi.dei.estg.ipleiria.am.listeners.DispositivoListener;
+import amsi.dei.estg.ipleiria.am.listeners.EstatisticaListener;
+import amsi.dei.estg.ipleiria.am.listeners.LoginListener;
+import amsi.dei.estg.ipleiria.am.listeners.UtilizadorListener;
 import amsi.dei.estg.ipleiria.am.utils.AvariaJsonParser;
 import amsi.dei.estg.ipleiria.am.utils.DispositivoJsonParser;
 import amsi.dei.estg.ipleiria.am.utils.EstatisticaJsonParser;
 import amsi.dei.estg.ipleiria.am.utils.UtilizadorJsonParser;
 
-public class SingletonGestorAvarias implements AvariasListener, VolleyListener {
+public class SingletonGestorAvarias implements AvariasListener, LoginListener, DispositivoListener, UtilizadorListener, EstatisticaListener {
 
     private ArrayList<Avaria> avarias;
     private ArrayList<Dispositivo> dispositivos;
@@ -48,16 +49,19 @@ public class SingletonGestorAvarias implements AvariasListener, VolleyListener {
     private static final int ADICIONAR_DB = 1;
     private static final int REMOVER_DB = 3;
 
-    private VolleyListener volleyListener;
+    private LoginListener loginListener;
+    private UtilizadorListener utilizadorListener;
+    private DispositivoListener dispositivoListener;
+    private EstatisticaListener estatisticaListener;
 
-    private static final String mUrlAPIAvarias = "http://192.168.1.125:8080/avarias";
-    private static final String mUrlAPIAvariasOrd = "http://192.168.1.125:8080/avarias/ordered/";
-    private static final String mUrlAPIDispositivos = "http://192.168.1.125:8080/dispositivos";
-    private static final String mUrlAPIEstatistica = "http://192.168.1.125:8080/relatorios/estatistica/anual";
-    private static final String mUrlAPILogin = "http://192.168.1.125:8080/utilizadores/auth/";
-    private static final String mUrlAvariasByUser = "http://192.168.1.125:8080/avarias/byuser/";
-    private static final String getmUrlAvariasbyRef = "http://192.168.1.125:8080/avarias/byref/";
-    private static final String getmUrlAPIUtilizadores = "http://192.168.1.125:8080/utilizadores/";
+    private static final String mUrlAPIAvarias = "http://192.168.1.111:8080/avarias";
+    private static final String mUrlAPIAvariasOrd = "http://192.168.1.111:8080/avarias/ordered/";
+    private static final String mUrlAPIDispositivos = "http://192.168.1.111:8080/dispositivos";
+    private static final String mUrlAPIEstatistica = "http://192.168.1.111:8080/relatorios/estatistica/anual";
+    private static final String mUrlAPILogin = "http://192.168.1.111:8080/utilizadores/auth/";
+    private static final String mUrlAvariasByUser = "http://192.168.1.111:8080/avarias/byuser/";
+    private static final String getmUrlAvariasbyRef = "http://192.168.1.111:8080/avarias/byref/";
+    private static final String getmUrlAPIUtilizadores = "http://192.168.1.111:8080/utilizadores/";
 
 
     public static synchronized SingletonGestorAvarias getInstance(Context context){
@@ -182,10 +186,6 @@ public class SingletonGestorAvarias implements AvariasListener, VolleyListener {
         a.setTipo(avaria.getTipo());
         a.setGravidade(avaria.getGravidade());
         a.setIdDispositivo(avaria.getIdDispositivo());
-
-        if(avariaDBHelper.editarAvariaDB(a)){
-            System.out.println("--> Avaria atualizada DB");
-        }
     }
 
     public void removerAvariaDB(int id){
@@ -194,7 +194,6 @@ public class SingletonGestorAvarias implements AvariasListener, VolleyListener {
         if(a != null){
             if(avariaDBHelper.removerAvariaDB(a.getIdAvaria())){
                 avarias.remove(a);
-                System.out.println("--> Avaria removida DB");
             }
         }
     }
@@ -211,20 +210,19 @@ public class SingletonGestorAvarias implements AvariasListener, VolleyListener {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println("CARALHO->" + error.getMessage());
             }
         })
         {
             @Override
             protected Map<String, String> getParams(){
                 Map<String, String> params = new HashMap<>();
-                params.put("idUtilizador", ""+avaria.getIdUtilizador());
+                params.put("idUtilizador", Integer.toString(avaria.getIdUtilizador()));
                 params.put("data", avaria.getDate());
-                params.put("idDispositivo", ""+avaria.getIdDispositivo());
+                params.put("idDispositivo", Integer.toString(avaria.getIdDispositivo()));
                 params.put("descricao", avaria.getDescricao());
-                params.put("estado", ""+avaria.getEstado());
-                params.put("gravidade", ""+avaria.getGravidade());
-                params.put("tipo", ""+avaria.getTipo());
+                params.put("estado", Integer.toString(avaria.getEstado()));
+                params.put("gravidade",Integer.toString(avaria.getGravidade()));
+                params.put("tipo", Integer.toString(avaria.getTipo()));
 
                 return params;
             }
@@ -257,20 +255,16 @@ public class SingletonGestorAvarias implements AvariasListener, VolleyListener {
                     adicionarAvariasDB(avarias);
 
                     if(avariasListener != null){
-                        (new Handler()).postDelayed(this::loadAdapter, 1000);
+                        avariasListener.onRefreshListaAvarias(avarias);
+                        utilizadorListener.onUtilizadoresRefresh(utilizadores);
+                        dispositivoListener.onDispositivosRefresh(dispositivos);
                     }
 
-                    System.out.println("--> AVARIAS: " + response);
-                }
-
-                private void loadAdapter() {
-                    avariasListener.onRefreshListaAvarias(avarias);
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    System.out.println(error.getMessage());
-                  //// Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+
                 }
             }){
                 @Override
@@ -304,22 +298,19 @@ public class SingletonGestorAvarias implements AvariasListener, VolleyListener {
                             avarias = AvariaJsonParser.parserJsonAvarias(response);
 
                             if(avariasListener != null){
-                                (new Handler()).postDelayed(this::loadAdapter, 1000);
-
+                                avariasListener.onRefreshListaAvarias(avarias);
+                                utilizadorListener.onUtilizadoresRefresh(utilizadores);
+                                dispositivoListener.onDispositivosRefresh(dispositivos);
                             }
                         }else{
                             Toast.makeText(context, "Não tem avarias associadas!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
-                private void loadAdapter() {
-                    avariasListener.onRefreshListaAvarias(avarias);
-                }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    System.out.println(error.getMessage());
-                    //// Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+
                 }
             }){
                 @Override
@@ -349,14 +340,11 @@ public class SingletonGestorAvarias implements AvariasListener, VolleyListener {
                 @Override
                 public void onResponse(JSONArray response) {
                     utilizadores = UtilizadorJsonParser.parserJsonUtilizadores(response);
-                    System.out.println(response);
                     //adicionarUtilizadoresDB(utilizadores);
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    System.out.println(error.getMessage());
-                    //// Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }){
                 @Override
@@ -369,8 +357,6 @@ public class SingletonGestorAvarias implements AvariasListener, VolleyListener {
                 }
             };
 
-
-
             volleyQueue.add(request);
         }
     }
@@ -382,19 +368,17 @@ public class SingletonGestorAvarias implements AvariasListener, VolleyListener {
             final StringRequest request = new StringRequest(Request.Method.GET, mUrlAPILogin + username + "/" + password, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    if(response != null){
-                        if(volleyListener != null){
-                            utilizador = UtilizadorJsonParser.parserJsonUtilizador(response);
-                            volleyListener.requestFinished(true);
-                        }
-                    }else{
+                    utilizador = UtilizadorJsonParser.parserJsonUtilizador(response);
+
+                    if(loginListener != null){
+                        loginListener.validateLogin(utilizador);
                     }
                 }
 
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    volleyListener.requestFinished(false);
+
                 }
             });
 
@@ -412,14 +396,12 @@ public class SingletonGestorAvarias implements AvariasListener, VolleyListener {
                 public void onResponse(JSONArray response) {
                     dispositivos = DispositivoJsonParser.parserJsonDispositivos(response);
                     adicionarDispositivosDB(dispositivos);
-                    System.out.println("--> Dispositivos: " + response);
                 }
 
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    System.out.println(error.getMessage());
-                    //Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+
                 }
             });
             volleyQueue.add(request);
@@ -433,24 +415,17 @@ public class SingletonGestorAvarias implements AvariasListener, VolleyListener {
             JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, getmUrlAvariasbyRef + query, null, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
-                    System.out.println(response);
-                    if (response != null){
-                        if(response.length() > 0){
-                            avarias = AvariaJsonParser.parserJsonAvarias(response);
-                        }else{
-                            avarias = null;
-                        }
+                    avarias = AvariaJsonParser.parserJsonAvarias(response);
+                    if(avariasListener != null){
+                        avariasListener.onRefreshListaAvarias(avarias);
+                        utilizadorListener.onUtilizadoresRefresh(utilizadores);
+                        dispositivoListener.onDispositivosRefresh(dispositivos);
                     }
-
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    System.out.println("VOLLEY ERROR");
-                    if(avarias != null){
-                        avarias.clear();
-                    }
-                  ///  Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                    avariasListener.onRefreshListaAvarias(null);
                 }
             }){
                 @Override
@@ -504,8 +479,6 @@ public class SingletonGestorAvarias implements AvariasListener, VolleyListener {
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                System.out.println("OIIII-> " + avaria.getIdAvaria());
-                //Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }){
             @Override
@@ -542,11 +515,14 @@ public class SingletonGestorAvarias implements AvariasListener, VolleyListener {
                 @Override
                 public void onResponse(JSONObject response) {
                     estatistica = EstatisticaJsonParser.parserJsonEstatisitica(response);
+                    if (estatisticaListener != null){
+                        estatisticaListener.onEstatisticaRefresh(estatistica);
+                    }
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    System.out.println(error.getMessage());
+
                 }
             }){
                 @Override
@@ -572,9 +548,22 @@ public class SingletonGestorAvarias implements AvariasListener, VolleyListener {
         this.avariasListener = avariasListener;
     }
 
-    public void setVolleyListener(VolleyListener volleyListener){
-        this.volleyListener = volleyListener;
+    public void setLoginListener(LoginListener loginListener) {
+        this.loginListener = loginListener;
     }
+
+    public void setDispositivoListener(DispositivoListener dispositivoListener) {
+        this.dispositivoListener = dispositivoListener;
+    }
+
+    public void setUtilizadorListener(UtilizadorListener utilizadorListener) {
+        this.utilizadorListener = utilizadorListener;
+    }
+
+    public void setEstatisticaListener(EstatisticaListener estatisticaListener) {
+        this.estatisticaListener = estatisticaListener;
+    }
+
 
     @Override
     public void onRefreshListaAvarias(ArrayList<Avaria> listaAvaria) {
@@ -601,7 +590,22 @@ public class SingletonGestorAvarias implements AvariasListener, VolleyListener {
     }
 
     @Override
-    public void requestFinished(boolean exsitance) {
+    public void validateLogin(Utilizador utilizador) {
+
+    }
+
+    @Override
+    public void onDispositivosRefresh(ArrayList<Dispositivo> dispositivo) {
+
+    }
+
+    @Override
+    public void onUtilizadoresRefresh(ArrayList<Utilizador> utilizador) {
+
+    }
+
+    @Override
+    public void onEstatisticaRefresh(Estatistica estatistica) {
 
     }
 }

@@ -1,27 +1,19 @@
 package amsi.dei.estg.ipleiria.am.fragments;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import amsi.dei.estg.ipleiria.am.MainActivity;
 import amsi.dei.estg.ipleiria.am.R;
 import amsi.dei.estg.ipleiria.am.models.SingletonGestorAvarias;
 import amsi.dei.estg.ipleiria.am.models.Utilizador;
-import amsi.dei.estg.ipleiria.am.views.AnomalyActivity;
-import amsi.dei.estg.ipleiria.am.views.MyAnomalyListActivity;
 
 public class ProfileFragment extends Fragment {
     private TextView tvUsername;
@@ -37,16 +29,6 @@ public class ProfileFragment extends Fragment {
         Utilizador utilizador = SingletonGestorAvarias.getInstance(getContext()).getUtilizador();
         tvUsername.setText(utilizador.getNomeUtilizador());
 
-        btnMyAnomaly.setOnClickListener(new View.OnClickListener()
-        {
-
-            @Override
-            public void onClick(View v)
-            {
-                Intent intent = new Intent(getContext(), MyAnomalyListActivity.class);
-                startActivity(intent);
-            }
-        });
         return rootview;
     }
 }

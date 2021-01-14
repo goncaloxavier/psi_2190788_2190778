@@ -13,6 +13,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import amsi.dei.estg.ipleiria.am.R;
+import amsi.dei.estg.ipleiria.am.listeners.UtilizadorListener;
 import amsi.dei.estg.ipleiria.am.models.Avaria;
 import amsi.dei.estg.ipleiria.am.models.SingletonGestorAvarias;
 
