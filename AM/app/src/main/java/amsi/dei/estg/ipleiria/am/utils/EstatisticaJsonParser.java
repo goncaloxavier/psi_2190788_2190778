@@ -15,14 +15,13 @@ public class EstatisticaJsonParser {
         Estatistica auxEstatistica = new Estatistica();
         try{
             JSONObject estatistica = response;
-            int numAvarias = estatistica.getInt("totalAvarias");
-            int numAvariasNR = estatistica.getInt("totalAvariasNR");
-            int numAvariasR = estatistica.getInt("totalAvariasR");
-            int numDispositivos = estatistica.getInt("totalDispositivoT");
-            int numDispositivosNF = estatistica.getInt("totalDispositivoNF");
-            int numDispositivosF = estatistica.getInt("totalDispositivoF");
+            int numAvarias = estatistica.getInt("avariasTotal");
+            int numAvariasNR = estatistica.getInt("avariasNR");
+            int numAvariasR = estatistica.getInt("avariasR");
+            int numDispositivosNF = estatistica.getInt("dispositivosNF");
+            int numDispositivosF = estatistica.getInt("dispositivosF");
 
-            auxEstatistica = new Estatistica(numAvarias, numDispositivos, numAvariasR, numAvariasNR, numDispositivosF, numDispositivosNF);
+            auxEstatistica = new Estatistica(numAvarias, numAvariasR, numAvariasNR, numDispositivosF, numDispositivosNF);
         }catch (JSONException e){
             e.printStackTrace();
         }

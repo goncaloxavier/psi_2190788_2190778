@@ -25,7 +25,7 @@ public class EstatisticaFragment extends Fragment {
         View rootview = inflater.inflate(R.layout.fragment_estatistica, container, false);
 
         txtAvarias = rootview.findViewById(R.id.txt_NumAvarias);
-        txtDispositivos = rootview.findViewById(R.id.txt_NumDispositivos);
+
         txtAvariasRes = rootview.findViewById(R.id.txt_NumAvariasResolvidas);
         txtAvariasNaoRes = rootview.findViewById(R.id.txt_NumAvariasNaoResolvidas);
         txtDispositivosF = rootview.findViewById(R.id.txt_NumDispositivosFuncionais);
@@ -41,12 +41,10 @@ public class EstatisticaFragment extends Fragment {
     public void carregarEstatistica(){
         if(estatistica != null){
             txtAvarias.setText(String.valueOf(estatistica.getNumAvarias()));
-            txtDispositivos.setText(String.valueOf(estatistica.getNumDispositivos()));
             txtAvariasRes.setText(String.valueOf(estatistica.getNumAvariasR()));
             txtAvariasNaoRes.setText(String.valueOf(estatistica.getNumAvariasNR()));
             txtDispositivosF.setText(String.valueOf(estatistica.getNumDispositivosF()));
             txtDispositivosNaoF.setText(String.valueOf(estatistica.getNumDispositivosNF()));
-            System.out.println("YEEEEEEEEEEEEE");
         }
     }
 }

@@ -23,10 +23,9 @@ import amsi.dei.estg.ipleiria.am.listeners.AvariasListener;
 import amsi.dei.estg.ipleiria.am.models.Avaria;
 import amsi.dei.estg.ipleiria.am.models.SingletonGestorAvarias;
 
-public class MyAnomalyListActivityActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, AvariasListener {
+public class MyAnomalyListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, AvariasListener {
     private ListView lvListaAvarias;
     private ArrayList<Avaria> listaAvarias;
-    public static final int COMEBACK = 1;
     SwipeRefreshLayout swipeRefreshLayout;
     private FloatingActionButton fab;
 

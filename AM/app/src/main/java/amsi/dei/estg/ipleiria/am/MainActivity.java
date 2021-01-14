@@ -25,7 +25,7 @@ import amsi.dei.estg.ipleiria.am.models.SingletonGestorAvarias;
 import amsi.dei.estg.ipleiria.am.models.Utilizador;
 import amsi.dei.estg.ipleiria.am.views.AnomalyActivity;
 import amsi.dei.estg.ipleiria.am.fragments.ProfileFragment;
-import amsi.dei.estg.ipleiria.am.views.MyAnomalyListActivityActivity;
+import amsi.dei.estg.ipleiria.am.views.MyAnomalyListActivity;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private BottomNavigationView bottomNavigationView2;
 
     private FragmentManager fragmentManager;
-    private int whichFragment;
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -44,14 +43,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         bottomNavigationView = (BottomNavigationView)findViewById(R.id.navigation);
         bottomNavigationView2 = (BottomNavigationView)findViewById(R.id.navigation_tecnico);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView2.setOnNavigationItemSelectedListener(this);
-        verifyUser(SingletonGestorAvarias.getInstance(getApplicationContext()).getUtilizador());
         fragmentManager = getSupportFragmentManager();
-        carregarFragmentoInicial();
+        verifyUser(SingletonGestorAvarias.getInstance(getApplicationContext()).getUtilizador());
     }
 
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -83,19 +80,31 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     private void verifyUser(Utilizador utilizador){
-        switch (utilizador.getTipo()){
-            case 0:
-                bottomNavigationView2.setVisibility(View.INVISIBLE);
-                bottomNavigationView.setVisibility(View.VISIBLE);
-                break;
-            case 1:
-                bottomNavigationView2.setVisibility(View.VISIBLE);
-                bottomNavigationView.setVisibility(View.INVISIBLE);
-                break;
-            case 2:
-                bottomNavigationView2.setVisibility(View.VISIBLE);
-                bottomNavigationView.setVisibility(View.INVISIBLE);
-                break;
+        Fragment fragment = null;
+        if(utilizador != null){
+            switch (utilizador.getTipo()){
+                case 0:
+                    bottomNavigationView2.setVisibility(View.INVISIBLE);
+                    bottomNavigationView.setVisibility(View.VISIBLE);
+                    fragment = new VerificarAvariasFragment();
+                    fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+                    bottomNavigationView.setSelectedItemId(R.id.verificarAvaria);
+                    break;
+                case 1:
+                    bottomNavigationView2.setVisibility(View.VISIBLE);
+                    bottomNavigationView.setVisibility(View.INVISIBLE);
+                    fragment = new ListaAvariasFragment();
+                    fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+                    bottomNavigationView2.setSelectedItemId(R.id.minhasAvarias);
+                    break;
+                case 2:
+                    bottomNavigationView2.setVisibility(View.VISIBLE);
+                    bottomNavigationView.setVisibility(View.INVISIBLE);
+                    fragment = new ListaAvariasFragment();
+                    fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+                    bottomNavigationView2.setSelectedItemId(R.id.minhasAvarias);
+                    break;
+            }
         }
     }
 }

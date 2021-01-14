@@ -15,6 +15,30 @@ import amsi.dei.estg.ipleiria.am.models.Utilizador;
 
 public class UtilizadorJsonParser {
 
+    public static ArrayList<Utilizador> parserJsonUtilizadores(JSONArray response){
+        ArrayList<Utilizador> listaUtilizadores = new ArrayList<>();
+
+        try{
+            for (int i = 0; i < response.length(); i++){
+                JSONObject utilizador = (JSONObject) response.get(i);
+
+                int idUtilizador = utilizador.getInt("idUtilizador");
+                int tipo = utilizador.getInt("tipo");
+                int estado = utilizador.getInt("estado");
+                String nomeUtilizador = utilizador.getString("nomeUtilizador");
+                String palavraPasse = utilizador.getString("palavraPasse");
+                String email = utilizador.getString("email");
+
+                Utilizador auxUtilizador = new Utilizador(nomeUtilizador, palavraPasse, email, tipo, estado, idUtilizador);
+                listaUtilizadores.add(auxUtilizador);
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        return listaUtilizadores;
+    }
+
     public static Utilizador parserJsonUtilizador(String response){
         Utilizador auxUtilizador = null;
 

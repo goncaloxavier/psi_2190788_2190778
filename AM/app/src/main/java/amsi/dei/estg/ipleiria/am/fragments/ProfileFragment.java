@@ -21,7 +21,7 @@ import amsi.dei.estg.ipleiria.am.R;
 import amsi.dei.estg.ipleiria.am.models.SingletonGestorAvarias;
 import amsi.dei.estg.ipleiria.am.models.Utilizador;
 import amsi.dei.estg.ipleiria.am.views.AnomalyActivity;
-import amsi.dei.estg.ipleiria.am.views.MyAnomalyListActivityActivity;
+import amsi.dei.estg.ipleiria.am.views.MyAnomalyListActivity;
 
 public class ProfileFragment extends Fragment {
     private TextView tvUsername;
@@ -43,12 +43,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v)
             {
-                (new Handler()).postDelayed(this::onClick, 1000);
-
-            }
-
-            private void onClick() {
-                Intent intent = new Intent(getContext(), MyAnomalyListActivityActivity.class);
+                Intent intent = new Intent(getContext(), MyAnomalyListActivity.class);
                 startActivity(intent);
             }
         });

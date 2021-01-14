@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity implements VolleyListener {
         String username = edtUsername.getText().toString();
         String password = edtPassword.getText().toString();
         SingletonGestorAvarias.getInstance(getApplicationContext()).loginAPI(username, password, getApplicationContext());
-        (new Handler()).postDelayed(this::printUser, 2000);
+        (new Handler()).postDelayed(this::printUser, 1000);
     }
 
 
@@ -48,10 +48,12 @@ public class LoginActivity extends AppCompatActivity implements VolleyListener {
 
     public void printUser(){
         if(utilizador != null){
-            //SharedPreferences sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
-            //SingletonGestorAvarias.getInstance(getApplicationContext()).saveUser(sharedPreferences);
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
+        }
+        else{
+            edtUsername.setError("Wrong Username");
+            edtPassword.setError("Wrong Password");
         }
     }
 }

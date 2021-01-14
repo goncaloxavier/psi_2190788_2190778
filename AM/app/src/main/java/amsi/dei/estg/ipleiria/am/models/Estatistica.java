@@ -1,7 +1,7 @@
 package amsi.dei.estg.ipleiria.am.models;
 
 public class Estatistica {
-    private int numAvarias, numDispositivos, numAvariasR, numAvariasNR, numDispositivosF, numDispositivosNF;
+    private int numAvarias, numAvariasR, numAvariasNR, numDispositivosF, numDispositivosNF;
 
     public int getNumAvarias() {
         return numAvarias;
@@ -9,14 +9,6 @@ public class Estatistica {
 
     public void setNumAvarias(int numAvarias) {
         this.numAvarias = numAvarias;
-    }
-
-    public int getNumDispositivos() {
-        return numDispositivos;
-    }
-
-    public void setNumDispositivos(int numDispositivos) {
-        this.numDispositivos = numDispositivos;
     }
 
     public int getNumAvariasR() {
@@ -51,9 +43,8 @@ public class Estatistica {
         this.numDispositivosNF = numDispositivosNF;
     }
 
-    public Estatistica(int numAvarias, int numDispositivos, int numAvariasR, int numAvariasNR, int numDispositivosF, int numDispositivosNF) {
+    public Estatistica(int numAvarias, int numAvariasR, int numAvariasNR, int numDispositivosF, int numDispositivosNF) {
         this.numAvarias = numAvarias;
-        this.numDispositivos = numDispositivos;
         this.numAvariasR = numAvariasR;
         this.numAvariasNR = numAvariasNR;
         this.numDispositivosF = numDispositivosF;

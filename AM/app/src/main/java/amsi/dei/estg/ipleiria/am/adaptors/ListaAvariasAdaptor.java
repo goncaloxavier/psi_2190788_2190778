@@ -2,6 +2,7 @@ package amsi.dei.estg.ipleiria.am.adaptors;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 
 import amsi.dei.estg.ipleiria.am.R;
 import amsi.dei.estg.ipleiria.am.models.Avaria;
+import amsi.dei.estg.ipleiria.am.models.SingletonGestorAvarias;
 
 public class ListaAvariasAdaptor extends BaseAdapter {
 
@@ -61,16 +63,20 @@ public class ListaAvariasAdaptor extends BaseAdapter {
             convertView.setTag(viewHolderLista);
         }
         viewHolderLista.update(avarias.get(position));
+
+
         return convertView;
     }
 
     private class ViewHolderLista{
-        private final TextView descricao, dataAvaria, referencia, tipo, estado;
+        private final TextView descricao, dataAvaria, referencia, tipo, estado, utilizador;
+        private int position;
 
         public ViewHolderLista(View convertView){
             descricao = convertView.findViewById(R.id.tvDescricao);
             dataAvaria = convertView.findViewById(R.id.tvDataAvaria);
             referencia = convertView.findViewById(R.id.tvReferencia);
+            utilizador = convertView.findViewById(R.id.tvUtilizadorlabel);
             tipo = convertView.findViewById(R.id.tvTipo);
             estado = convertView.findViewById(R.id.tvEstado);
         }
@@ -79,6 +85,7 @@ public class ListaAvariasAdaptor extends BaseAdapter {
             descricao.setText(avaria.getDescricao());
             dataAvaria.setText(avaria.getDate());
             referencia.setText(String.valueOf(avaria.getIdDispositivo()));
+            utilizador.setText(SingletonGestorAvarias.getInstance(context).getUtilizador(avaria.getIdUtilizador()).getNomeUtilizador());
             estado.setText("");
             if(avaria.getTipo() == 0){
                 tipo.setText("Hardware");

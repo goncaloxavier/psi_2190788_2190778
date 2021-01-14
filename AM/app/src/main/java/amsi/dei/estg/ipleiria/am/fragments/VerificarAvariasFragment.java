@@ -3,6 +3,7 @@ package amsi.dei.estg.ipleiria.am.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Telephony;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -17,6 +19,7 @@ import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -49,10 +52,7 @@ public class VerificarAvariasFragment extends Fragment{
         lvListaAvarias = rootview.findViewById(R.id.lvListaAvarias);
         swipeRefreshLayout = rootview.findViewById(R.id.swipe);
         swipeRefreshLayout.setEnabled(false);
-
-
         SingletonGestorAvarias.getInstance(getContext()).getAllDispositivosAPI(getContext());
-
         lvListaAvarias.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -80,7 +80,6 @@ public class VerificarAvariasFragment extends Fragment{
         }
     }
 
-
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_pesquisa, menu);
@@ -92,9 +91,18 @@ public class VerificarAvariasFragment extends Fragment{
             @Override
             public boolean onQueryTextSubmit(String query) {
                 SingletonGestorAvarias.getInstance(getContext()).getDispositivobyRef(getContext(), query);
-                listaAvarias = SingletonGestorAvarias.getInstance(getContext()).getAvarias();
-                lvListaAvarias.setAdapter(new ListaAvariasAdaptor(getContext(), listaAvarias));
+                SingletonGestorAvarias.getInstance(getContext()).getAllUsersAPI(getContext());
+                (new Handler()).postDelayed(this::waitVolley, 1000);
                 return true;
+            }
+
+            private void waitVolley() {
+                if(SingletonGestorAvarias.getInstance(getContext()).getAvarias() != null){
+                    listaAvarias = SingletonGestorAvarias.getInstance(getContext()).getAvarias();
+                    lvListaAvarias.setAdapter(new ListaAvariasAdaptor(getContext(), listaAvarias));
+                }else{
+                    lvListaAvarias.setAdapter(null);
+                }
             }
 
             @Override
