@@ -5,9 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import com.bumptech.glide.util.Util;
-
 import java.util.ArrayList;
 
 public class AvariaDBHelper extends SQLiteOpenHelper {
@@ -72,14 +69,21 @@ public class AvariaDBHelper extends SQLiteOpenHelper {
                         ESTADO_DISPOSITIVO + " INTEGER NOT NULL, " +
                         DATA_DISPOSITIVO + " TEXT NOT NULL);";
 
+        String createUtilizadorTable =
+                "CREATE TABLE " + TABLE_NAME_UTILIZADOR +
+                        "(" + ID_UTILIZADOR + " INTEGER PRIMARY KEY, " +
+                        NOME_UTILIZADOR + " TEXT NOT NULL);";
+
         db.execSQL(createAvariaTable);
         db.execSQL(createDispositivoTable);
+        db.execSQL(createUtilizadorTable);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_AVARIA);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_DISPOSITIVO);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_UTILIZADOR);
 
         this.onCreate(sqLiteDatabase);
     }
@@ -132,7 +136,7 @@ public class AvariaDBHelper extends SQLiteOpenHelper {
 
         Cursor cursor = this.sqLiteDatabase.query(TABLE_NAME_AVARIA, new String[]{
                         ID_AVARIA, ESTADO_AVARIA, TIPO_AVARIA, GRAVIDADE_AVARIA, DISPOSITIVO_AVARIA, DESCRICAO_AVARIA, DATA_AVARIA, UTILIZADOR_AVARIA},
-                ESTADO_AVARIA + " IN (3,2,1,0)", null, null, null, ESTADO_AVARIA);
+                ESTADO_AVARIA + " IN (3,2,1,0)", null, null, null, ESTADO_AVARIA + ", " + DATA_AVARIA + " DESC");
 
         if(cursor.moveToFirst()){
             do{
@@ -206,5 +210,44 @@ public class AvariaDBHelper extends SQLiteOpenHelper {
         }
 
         return dispositivos;
+    }
+
+    //Utilizador
+    public Utilizador adicionarUtilizadorDB(Utilizador utilizador){
+        ContentValues values = new ContentValues();
+        values.put(ID_UTILIZADOR, utilizador.getIdUtilizador());
+        values.put(NOME_UTILIZADOR, utilizador.getNomeUtilizador());
+
+        long id = this.sqLiteDatabase.insert(TABLE_NAME_UTILIZADOR, null, values);
+
+        if(id > -1){
+            utilizador.setIdUtilizador((int)id);
+            return utilizador;
+        }
+
+        return null;
+    }
+
+
+    public void removerAllUtilizadoresDB(){
+        this.sqLiteDatabase.delete(TABLE_NAME_UTILIZADOR, null, null);
+    }
+
+    public ArrayList<Utilizador> getAllUtilizadoresDB(){
+        ArrayList<Utilizador> utilizadores = new ArrayList<>();
+
+        Cursor cursor = this.sqLiteDatabase.query(TABLE_NAME_UTILIZADOR, new String[]{
+                        ID_UTILIZADOR, NOME_UTILIZADOR},
+                null, null, null, null, null);
+
+        if(cursor.moveToFirst()){
+            do{
+                Utilizador auxUtilizador = new Utilizador(cursor.getInt(0), cursor.getString(1));
+
+                utilizadores.add(auxUtilizador);
+            }while(cursor.moveToNext());
+        }
+
+        return utilizadores;
     }
 }

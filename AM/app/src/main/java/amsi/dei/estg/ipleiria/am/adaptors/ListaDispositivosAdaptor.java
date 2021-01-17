@@ -13,24 +13,25 @@ import java.util.ArrayList;
 
 import amsi.dei.estg.ipleiria.am.R;
 import amsi.dei.estg.ipleiria.am.models.Avaria;
+import amsi.dei.estg.ipleiria.am.models.Dispositivo;
 import amsi.dei.estg.ipleiria.am.models.SingletonGestorAvarias;
 
-public class ListaAvariasAdaptor extends BaseAdapter {
+public class ListaDispositivosAdaptor extends BaseAdapter {
 
     private Context context;
     private LayoutInflater layoutInflater;
-    private ArrayList<Avaria> avarias;
+    private ArrayList<Dispositivo> dispositivos;
 
-    public ListaAvariasAdaptor(Context context, ArrayList<Avaria> avarias) {
+    public ListaDispositivosAdaptor(Context context, ArrayList<Dispositivo> dispositivos) {
         this.context = context;
-        this.avarias = avarias;
+        this.dispositivos = dispositivos;
     }
 
     @Override
     public int getCount() {
         int size = 0;
-        if(avarias != null){
-            size = avarias.size();
+        if(dispositivos != null){
+            size = dispositivos.size();
         }
 
         return size;
@@ -38,7 +39,7 @@ public class ListaAvariasAdaptor extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return avarias.get(position);
+        return dispositivos.get(position);
     }
 
     @Override
@@ -53,7 +54,7 @@ public class ListaAvariasAdaptor extends BaseAdapter {
         }
 
         if (convertView == null) {
-            convertView = layoutInflater.inflate(R.layout.item_lista_avaria, null);
+            convertView = layoutInflater.inflate(R.layout.item_lista_dispositivo, null);
         }
 
         ViewHolderLista viewHolderLista = (ViewHolderLista) convertView.getTag();
@@ -61,49 +62,38 @@ public class ListaAvariasAdaptor extends BaseAdapter {
             viewHolderLista = new ViewHolderLista(convertView);
             convertView.setTag(viewHolderLista);
         }
-        viewHolderLista.update(avarias.get(position));
+        viewHolderLista.update(dispositivos.get(position));
 
 
         return convertView;
     }
 
     private class ViewHolderLista{
-        private final TextView descricao, dataAvaria, referencia, tipo, estado, utilizador;
+        private final TextView dataCompra, tipo, referencia, estado;
 
         public ViewHolderLista(View convertView){
-            descricao = convertView.findViewById(R.id.tvEstadoD);
-            dataAvaria = convertView.findViewById(R.id.tvDataCompra);
+            dataCompra = convertView.findViewById(R.id.tvDataCompra);
+            tipo = convertView.findViewById(R.id.tvTipoD);
             referencia = convertView.findViewById(R.id.tvReferencia);
-            utilizador = convertView.findViewById(R.id.tvTipoD);
-            tipo = convertView.findViewById(R.id.tvTipo);
-            estado = convertView.findViewById(R.id.tvEstado);
+            estado = convertView.findViewById(R.id.tvEstadoD);
         }
 
-        public void update(Avaria avaria){
+        public void update(Dispositivo dispositivo){
             try{
-                descricao.setText(avaria.getDescricao());
-                dataAvaria.setText(avaria.getDate());
-                referencia.setText(String.valueOf(avaria.getIdDispositivo()));
-                utilizador.setText(SingletonGestorAvarias.getInstance(context).getUtilizador(avaria.getIdUtilizador()).getNomeUtilizador());
+                dataCompra.setText(dispositivo.getDataCompra());
+                tipo.setText(dispositivo.getTipo());
+                referencia.setText(dispositivo.getReferencia());
                 estado.setText("");
-                if(avaria.getTipo() == 0){
-                    tipo.setText("Hardware");
-                }else{
-                    tipo.setText("Software");
-                }
-                switch (avaria.getEstado()){
+                switch (dispositivo.getEstado()){
                     case 0:
                         estado.setBackgroundColor(Color.parseColor("#FFA500"));
                         break;
                     case 1:
-                        estado.setBackgroundColor(Color.YELLOW);
-                        break;
-                    case 2:
                         estado.setBackgroundColor(Color.GREEN);
                         break;
                 }
             }catch (NullPointerException e){
-                //Toast.makeText(context, "Erro ao carregar informação tente novamente.", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Erro ao carregar informação tente novamente.", Toast.LENGTH_LONG).show();
             }
         }
     }

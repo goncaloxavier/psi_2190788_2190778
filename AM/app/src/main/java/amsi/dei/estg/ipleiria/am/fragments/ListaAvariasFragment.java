@@ -4,15 +4,20 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -37,6 +42,7 @@ public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout
     private ArrayList<Utilizador> utilizadores;
     private ArrayList<Dispositivo> dispositivos;
     private ArrayList<Avaria> listaAvarias;
+    SearchView searchView;
     SwipeRefreshLayout swipeRefreshLayout;
     private FloatingActionButton fab;
 
@@ -92,17 +98,50 @@ public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout
         if (resultCode == Activity.RESULT_OK){
             switch (requestCode){
                 case AnomalyActivity.ADICIONAR:
-                    SingletonGestorAvarias.getInstance(getContext()).getAllAvariasAPI(getContext());
+                    if(SingletonGestorAvarias.getInstance(getContext()).getUtilizador().getTipo() != 0){
+                        SingletonGestorAvarias.getInstance(getContext()).getAllAvariasAPI(getContext());
+                    }else{
+                        SingletonGestorAvarias.getInstance(getContext()).getAllAvariasUserAPI(getContext());
+                    }
                     lvListaAvarias.setAdapter(new ListaAvariasAdaptor(getContext(), listaAvarias));
                     Snackbar.make(getView(), "Avaria adicionada com sucesso", Snackbar.LENGTH_LONG).show();
                     break;
                 case AnomalyActivity.EDITAR:
-                    SingletonGestorAvarias.getInstance(getContext()).getAllAvariasAPI(getContext());
+                    if(SingletonGestorAvarias.getInstance(getContext()).getUtilizador().getTipo() != 0){
+                        SingletonGestorAvarias.getInstance(getContext()).getAllAvariasAPI(getContext());
+                    }else{
+                        SingletonGestorAvarias.getInstance(getContext()).getAllAvariasUserAPI(getContext());
+                    }
                     lvListaAvarias.setAdapter(new ListaAvariasAdaptor(getContext(), listaAvarias));
                     Snackbar.make(getView(), "Avaria modificada com sucesso", Snackbar.LENGTH_LONG).show();
                     break;
             }
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_pesquisa, menu);
+
+        MenuItem itemPesquisa = menu.findItem(R.id.itemPesquisar);
+        searchView = (SearchView) itemPesquisa.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                SingletonGestorAvarias.getInstance(getContext()).getAllDispositivosAPI(getContext());
+                SingletonGestorAvarias.getInstance(getContext()).getAllUsersAPI(getContext());
+                SingletonGestorAvarias.getInstance(getContext()).getDispositivobyRef(getContext(), query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -123,6 +162,8 @@ public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout
     public void onRefreshListaAvarias(ArrayList<Avaria> listaAvaria) {
         if(listaAvaria != null){
             lvListaAvarias.setAdapter(new ListaAvariasAdaptor(getContext(), listaAvaria));
+        }else{
+            lvListaAvarias.setAdapter(null);
         }
     }
 

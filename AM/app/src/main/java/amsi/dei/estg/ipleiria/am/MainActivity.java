@@ -4,15 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import amsi.dei.estg.ipleiria.am.fragments.EstatisticaFragment;
 import amsi.dei.estg.ipleiria.am.fragments.ListaAvariasFragment;
-import amsi.dei.estg.ipleiria.am.fragments.VerificarAvariasFragment;
+import amsi.dei.estg.ipleiria.am.fragments.ListaDispositivosFragment;
 import amsi.dei.estg.ipleiria.am.models.SingletonGestorAvarias;
 import amsi.dei.estg.ipleiria.am.models.Utilizador;
 import amsi.dei.estg.ipleiria.am.fragments.ProfileFragment;
@@ -37,14 +37,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         verifyUser(SingletonGestorAvarias.getInstance(getApplicationContext()).getUtilizador());
     }
 
+    @SuppressLint("NonConstantResourceId")
     public boolean onNavigationItemSelected(MenuItem item) {
         Fragment fragment = null;
         switch (item.getItemId()){
-            case R.id.estatistica:
-                fragment = new EstatisticaFragment();
-                break;
-            case R.id.verificarAvaria:
-                fragment = new VerificarAvariasFragment();
+            case R.id.dispositivos:
+                fragment = new ListaDispositivosFragment();
                 break;
             case R.id.minhasAvarias:
                 fragment = new ListaAvariasFragment();

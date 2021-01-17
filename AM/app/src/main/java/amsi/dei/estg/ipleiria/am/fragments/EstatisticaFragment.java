@@ -16,8 +16,7 @@ import amsi.dei.estg.ipleiria.am.models.SingletonGestorAvarias;
 
 public class EstatisticaFragment extends Fragment implements EstatisticaListener {
 
-    private Estatistica estatistica;
-    private TextView txtAvarias, txtDispositivos, txtAvariasRes, txtAvariasNaoRes, txtDispositivosF, txtDispositivosNaoF;
+    private TextView txtAvarias, txtAvariasRes, txtAvariasNaoRes, txtDispositivosF, txtDispositivosNaoF;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -60,4 +60,9 @@ public class Utilizador {
         this.estado = estado;
         this.idUtilizador = idUtilizador;
     }
+
+    public Utilizador(int idUtilizador ,String nomeUtilizador){
+        this.idUtilizador = idUtilizador;
+        this.nomeUtilizador = nomeUtilizador;
+    }
 }

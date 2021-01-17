@@ -3,9 +3,7 @@ package amsi.dei.estg.ipleiria.am.views;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,22 +13,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-
 import amsi.dei.estg.ipleiria.am.R;
 import amsi.dei.estg.ipleiria.am.models.Avaria;
 import amsi.dei.estg.ipleiria.am.models.Dispositivo;
@@ -71,7 +61,6 @@ public class AnomalyActivity extends AppCompatActivity  {
         spinnerDispositivo = findViewById(R.id.spinnerDispositivo);
         tvEstadoEdit = findViewById(R.id.tvEstadoEdit);
         fab = findViewById(R.id.fab_avaria);
-
 
         spinnerDispositivo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -119,8 +108,22 @@ public class AnomalyActivity extends AppCompatActivity  {
             fab.setImageResource(R.drawable.ic_guardar_foreground);
             spinnerDispositivo.setVisibility(View.VISIBLE);
             spinnerEstado.setVisibility(View.VISIBLE);
+
             setSpinnerEstado();
             setSpinnerDispositivo();
+
+            if(avaria.getIdUtilizador() != SingletonGestorAvarias.getInstance(getApplicationContext()).getUtilizador().getIdUtilizador() && SingletonGestorAvarias.getInstance(getApplicationContext()).getUtilizador().getTipo() == 0){
+                setFieldsEditable(false);
+            }
+            else{
+                setFieldsEditable(true);
+            }
+
+            if(utilizador.getTipo() == 0){
+                spinnerEstado.setEnabled(false);
+            }else{
+                spinnerEstado.setEnabled(true);
+            }
         }
         else{
             setTitle("Adicionar Avaria");
@@ -174,8 +177,6 @@ public class AnomalyActivity extends AppCompatActivity  {
 
                     SingletonGestorAvarias.getInstance(getApplicationContext()).adicionarAvariaAPI(auxAvaria, getApplicationContext());
                 }
-                setResult(RESULT_OK);
-                finish();
             }
         });
     }
@@ -195,7 +196,11 @@ public class AnomalyActivity extends AppCompatActivity  {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.itemRemover:
-                dialogRemover();
+                if(avaria.getIdUtilizador() != SingletonGestorAvarias.getInstance(getApplicationContext()).getUtilizador().getIdUtilizador() && SingletonGestorAvarias.getInstance(getApplicationContext()).getUtilizador().getTipo() == 0){
+                    dialogSemPermissao();
+                }else{
+                    dialogRemover();
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -224,11 +229,25 @@ public class AnomalyActivity extends AppCompatActivity  {
                 .show();
     }
 
+    private void dialogSemPermissao(){
+        AlertDialog.Builder builder;
+        builder = new AlertDialog.Builder(this);
+        builder.setTitle("Remover Avaria")
+                .setMessage("Nao tem permissoes para remover esta avaria!")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .show();
+    }
+
     public void setSpinnerEstado(){
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.estados, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerEstado.setAdapter(adapter);
-        spinnerEstado.setVisibility(View.VISIBLE);
         spinnerEstado.setSelection(avaria.getEstado());
     }
 
@@ -243,6 +262,28 @@ public class AnomalyActivity extends AppCompatActivity  {
         if(avaria != null){
             spinnerDispositivo.setSelection(avaria.getIdDispositivo());
         }
+    }
+
+    public void setFieldsEditable(boolean option){
+        cbHardware.setFocusable(option);
+        cbHardware.setClickable(option);
+        cbSoftware.setFocusable(option);
+        cbSoftware.setClickable(option);
+        cbFuncional.setFocusable(option);
+        cbFuncional.setClickable(option);
+        cbNFuncional.setFocusable(option);
+        cbNFuncional.setClickable(option);
+        edtDescricao.setFocusable(option);
+        edtDescricao.setClickable(option);
+        spinnerEstado.setEnabled(option);
+        spinnerDispositivo.setEnabled(option);
+
+        if(option == false){
+            fab.setVisibility(View.GONE);
+        }else{
+            fab.setVisibility(View.VISIBLE);
+        }
+
     }
 
 

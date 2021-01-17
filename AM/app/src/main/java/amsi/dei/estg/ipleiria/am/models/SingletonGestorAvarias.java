@@ -1,6 +1,7 @@
 package amsi.dei.estg.ipleiria.am.models;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.util.Base64;
 import android.widget.Toast;
@@ -54,14 +55,15 @@ public class SingletonGestorAvarias implements AvariasListener, LoginListener, D
     private DispositivoListener dispositivoListener;
     private EstatisticaListener estatisticaListener;
 
-    private static final String mUrlAPIAvarias = "http://192.168.1.111:8080/avarias";
-    private static final String mUrlAPIAvariasOrd = "http://192.168.1.111:8080/avarias/ordered/";
-    private static final String mUrlAPIDispositivos = "http://192.168.1.111:8080/dispositivos";
-    private static final String mUrlAPIEstatistica = "http://192.168.1.111:8080/relatorios/estatistica/anual";
-    private static final String mUrlAPILogin = "http://192.168.1.111:8080/utilizadores/auth/";
-    private static final String mUrlAvariasByUser = "http://192.168.1.111:8080/avarias/byuser/";
-    private static final String getmUrlAvariasbyRef = "http://192.168.1.111:8080/avarias/byref/";
-    private static final String getmUrlAPIUtilizadores = "http://192.168.1.111:8080/utilizadores/";
+    private static final String ip = "192.168.0.15";
+    private static final String mUrlAPIAvarias = "http://" + ip + ":8080/avarias";
+    private static final String mUrlAPIAvariasOrd = "http://" + ip + ":8080/avarias/ordered/";
+    private static final String mUrlAPIDispositivos = "http://" + ip + ":8080/dispositivos";
+    private static final String mUrlAPIEstatistica = "http://" + ip + ":8080/relatorios/estatistica/anual";
+    private static final String mUrlAPILogin = "http://" + ip + ":8080/utilizadores/auth/";
+    private static final String mUrlAvariasByUser = "http://" + ip + ":8080/avarias/byuser/";
+    private static final String getmUrlAvariasbyRef = "http://" + ip + ":8080/avarias/byref/";
+    private static final String getmUrlAPIUtilizadores = "http://" + ip + ":8080/utilizadores/";
 
 
     public static synchronized SingletonGestorAvarias getInstance(Context context){
@@ -71,6 +73,8 @@ public class SingletonGestorAvarias implements AvariasListener, LoginListener, D
         }
         return instance;
     }
+
+    //############################ LOCAL #################################
 
     public SingletonGestorAvarias(Context context){
         avariaDBHelper = new AvariaDBHelper(context);
@@ -89,6 +93,22 @@ public class SingletonGestorAvarias implements AvariasListener, LoginListener, D
         }
 
         return null;
+    }
+
+    public int getNumAvariasByUser(int idUtilizador){
+        int total = 0;
+
+        if(avarias != null){
+            if(avarias.size() > 0){
+                for (Avaria a: avarias) {
+                    if(a.getIdUtilizador() == idUtilizador){
+                        total =+ 1;
+                    }
+                }
+            }
+        }
+
+        return total;
     }
 
     public Avaria getAvaria(int idAvaria) {
@@ -115,6 +135,39 @@ public class SingletonGestorAvarias implements AvariasListener, LoginListener, D
         }
     }
 
+    public void editarAvariaDB(Avaria avaria){
+        if(!avarias.contains(avaria)){
+            return;
+        }
+        Avaria a = getAvaria(avaria.getIdAvaria());
+        a.setDescricao(avaria.getDescricao());
+        a.setEstado(avaria.getEstado());
+        a.setTipo(avaria.getTipo());
+        a.setGravidade(avaria.getGravidade());
+        a.setIdDispositivo(avaria.getIdDispositivo());
+    }
+
+    public void removerAvariaDB(int id){
+        Avaria a = getAvaria(id);
+
+        if(a != null){
+            if(avariaDBHelper.removerAvariaDB(a.getIdAvaria())){
+                avarias.remove(a);
+            }
+        }
+    }
+
+    //Dispositivo
+    public void adicionarDispositivoDB(Dispositivo dispositivo){ avariaDBHelper.adicionarDispositivoDB(dispositivo); }
+
+    public void adicionarDispositivosDB(ArrayList<Dispositivo> dispositivos){
+        avariaDBHelper.removerAllDispositivosDB();
+
+        for(Dispositivo d : dispositivos){
+            adicionarDispositivoDB(d);
+        }
+    }
+
     public ArrayList<Dispositivo> getDispositivosDB() {
         dispositivos = avariaDBHelper.getAllDispositivosDB();
         return dispositivos;
@@ -132,6 +185,31 @@ public class SingletonGestorAvarias implements AvariasListener, LoginListener, D
         }
 
         return null;
+    }
+
+    public ArrayList<Dispositivo> getDispositivos() {
+        if(dispositivos.size() > 0){
+            return dispositivos;
+        }
+
+        return null;
+    }
+
+    //Utilizador
+    public Utilizador getUtilizador(){
+        return utilizador;
+    }
+
+    public void setUtilizador(Utilizador utilizador){ this.utilizador = utilizador; }
+
+    public void adicionarUtilizadorDB(Utilizador utilizador){ avariaDBHelper.adicionarUtilizadorDB(utilizador); }
+
+    public void adicionarUtilizadoresDB(ArrayList<Utilizador> utilizadores){
+        avariaDBHelper.removerAllUtilizadoresDB();
+
+        for(Utilizador u : utilizadores){
+            adicionarUtilizadorDB(u);
+        }
     }
 
     public ArrayList<Utilizador> getUtilizadores() {
@@ -158,46 +236,15 @@ public class SingletonGestorAvarias implements AvariasListener, LoginListener, D
         return null;
     }
 
-    public ArrayList<Dispositivo> getDispositivos() {
-        if(dispositivos.size() > 0){
-            return dispositivos;
-        }
+    public void saveUsertoSharedPref(SharedPreferences sharedPreferences){
 
-        return null;
     }
 
-    public void adicionarDispositivoDB(Dispositivo dispositivo){ avariaDBHelper.adicionarDispositivoDB(dispositivo); }
+    public Utilizador getUserFromSharedPref(SharedPreferences sharedPreferences){
+        Utilizador utilizador = null;
 
-    public void adicionarDispositivosDB(ArrayList<Dispositivo> dispositivos){
-        avariaDBHelper.removerAllDispositivosDB();
-
-        for(Dispositivo d : dispositivos){
-            adicionarDispositivoDB(d);
-        }
+        return utilizador;
     }
-
-    public void editarAvariaDB(Avaria avaria){
-        if(!avarias.contains(avaria)){
-            return;
-        }
-        Avaria a = getAvaria(avaria.getIdAvaria());
-        a.setDescricao(avaria.getDescricao());
-        a.setEstado(avaria.getEstado());
-        a.setTipo(avaria.getTipo());
-        a.setGravidade(avaria.getGravidade());
-        a.setIdDispositivo(avaria.getIdDispositivo());
-    }
-
-    public void removerAvariaDB(int id){
-        Avaria a = getAvaria(id);
-
-        if(a != null){
-            if(avariaDBHelper.removerAvariaDB(a.getIdAvaria())){
-                avarias.remove(a);
-            }
-        }
-    }
-
 
     //############################ API #################################
 
@@ -303,7 +350,7 @@ public class SingletonGestorAvarias implements AvariasListener, LoginListener, D
                                 dispositivoListener.onDispositivosRefresh(dispositivos);
                             }
                         }else{
-                            Toast.makeText(context, "Não tem avarias associadas!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Não tem avarias associadas!", Toast.LENGTH_LONG).show();
                         }
                     }
                 }
@@ -332,15 +379,15 @@ public class SingletonGestorAvarias implements AvariasListener, LoginListener, D
     public void getAllUsersAPI(final Context context){
         if(!AvariaJsonParser.isConnectionInternet(context)){
             Toast.makeText(context, "Nao tem ligacao a rede!!", Toast.LENGTH_SHORT).show();
-            if (avariasListener != null){
-                avariasListener.onRefreshListaAvarias(avariaDBHelper.getAllAvariasDB());
+            if (utilizadorListener != null){
+                utilizadorListener.onUtilizadoresRefresh(avariaDBHelper.getAllUtilizadoresDB());
             }
         }else{
             JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, getmUrlAPIUtilizadores, null, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
                     utilizadores = UtilizadorJsonParser.parserJsonUtilizadores(response);
-                    //adicionarUtilizadoresDB(utilizadores);
+                    adicionarUtilizadoresDB(utilizadores);
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -390,12 +437,19 @@ public class SingletonGestorAvarias implements AvariasListener, LoginListener, D
     public void getAllDispositivosAPI(final Context context){
         if(!DispositivoJsonParser.isConnectionInternet(context)){
             Toast.makeText(context, "Nao tem ligacao a rede!!", Toast.LENGTH_SHORT).show();
+            if (dispositivoListener != null){
+                dispositivoListener.onDispositivosRefresh(avariaDBHelper.getAllDispositivosDB());
+            }
         }else{
             JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, mUrlAPIDispositivos, null, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
                     dispositivos = DispositivoJsonParser.parserJsonDispositivos(response);
                     adicionarDispositivosDB(dispositivos);
+
+                    if(dispositivoListener != null){
+                        dispositivoListener.onDispositivosRefresh(dispositivos);
+                    }
                 }
 
             }, new Response.ErrorListener() {
@@ -539,10 +593,8 @@ public class SingletonGestorAvarias implements AvariasListener, LoginListener, D
         }
     }
 
-    public Estatistica getEstatistica(){
-            return estatistica;
-    }
 
+    //Interfaces
 
     public void setAvariasListener(AvariasListener avariasListener){
         this.avariasListener = avariasListener;
@@ -564,7 +616,6 @@ public class SingletonGestorAvarias implements AvariasListener, LoginListener, D
         this.estatisticaListener = estatisticaListener;
     }
 
-
     @Override
     public void onRefreshListaAvarias(ArrayList<Avaria> listaAvaria) {
 
@@ -584,18 +635,13 @@ public class SingletonGestorAvarias implements AvariasListener, LoginListener, D
         }
     }
 
-    //Utilizador
-    public Utilizador getUtilizador(){
-        return utilizador;
+    @Override
+    public void onDispositivosRefresh(ArrayList<Dispositivo> dispositivo) {
+
     }
 
     @Override
     public void validateLogin(Utilizador utilizador) {
-
-    }
-
-    @Override
-    public void onDispositivosRefresh(ArrayList<Dispositivo> dispositivo) {
 
     }
 
