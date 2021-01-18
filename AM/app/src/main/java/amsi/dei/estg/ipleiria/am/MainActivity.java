@@ -11,6 +11,7 @@ import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import amsi.dei.estg.ipleiria.am.fragments.EstatisticaFragment;
 import amsi.dei.estg.ipleiria.am.fragments.ListaAvariasFragment;
 import amsi.dei.estg.ipleiria.am.fragments.ListaDispositivosFragment;
 import amsi.dei.estg.ipleiria.am.models.SingletonGestorAvarias;
@@ -43,6 +44,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         switch (item.getItemId()){
             case R.id.dispositivos:
                 fragment = new ListaDispositivosFragment();
+                break;
+            case R.id.estatistica:
+                fragment = new EstatisticaFragment();
                 break;
             case R.id.minhasAvarias:
                 fragment = new ListaAvariasFragment();
@@ -77,5 +81,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 bottomNavigationView.setSelectedItemId(R.id.minhasAvarias);
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 }

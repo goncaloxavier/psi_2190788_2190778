@@ -155,13 +155,32 @@ public class AvariaDBHelper extends SQLiteOpenHelper {
 
         Cursor cursor = this.sqLiteDatabase.query(TABLE_NAME_AVARIA, new String[]{
                         ID_AVARIA, ESTADO_AVARIA, TIPO_AVARIA, GRAVIDADE_AVARIA, DISPOSITIVO_AVARIA, DESCRICAO_AVARIA, DATA_AVARIA, UTILIZADOR_AVARIA},
-                ESTADO_AVARIA + " IN (3,2,1,0) " + ID_UTILIZADOR + " =?", new String[]{"" + idUtilizador}, null, null, ESTADO_AVARIA);
+                ESTADO_AVARIA + " IN (3,2,1,0) AND " + UTILIZADOR_AVARIA + " = " + Integer.toString(idUtilizador), null, null, null, ESTADO_AVARIA);
 
         if(cursor.moveToFirst()){
             do{
                 Avaria auxAvaria = new Avaria(cursor.getInt(0), cursor.getInt(1), cursor.getInt(3),
                         cursor.getInt(2), cursor.getInt(4), cursor.getString(6), cursor.getString(5),  cursor.getInt(7));
+                System.out.println("AUX AVARIA-> " + auxAvaria.getDescricao());
+                avarias.add(auxAvaria);
+            }while(cursor.moveToNext());
+        }
 
+        return avarias;
+    }
+
+    public ArrayList<Avaria> getAvariasByRefDB(int idDispositivo){
+        ArrayList<Avaria> avarias = new ArrayList<>();
+
+        Cursor cursor = this.sqLiteDatabase.query(TABLE_NAME_AVARIA, new String[]{
+                        ID_AVARIA, ESTADO_AVARIA, TIPO_AVARIA, GRAVIDADE_AVARIA, DISPOSITIVO_AVARIA, DESCRICAO_AVARIA, DATA_AVARIA, UTILIZADOR_AVARIA},
+                ESTADO_AVARIA + " IN (3,2,1,0) AND " + DISPOSITIVO_AVARIA + " = " + Integer.toString(idDispositivo), null, null, null, ESTADO_AVARIA);
+
+        if(cursor.moveToFirst()){
+            do{
+                Avaria auxAvaria = new Avaria(cursor.getInt(0), cursor.getInt(1), cursor.getInt(3),
+                        cursor.getInt(2), cursor.getInt(4), cursor.getString(6), cursor.getString(5),  cursor.getInt(7));
+                System.out.println("AUX AVARIA-> " + auxAvaria.getDescricao());
                 avarias.add(auxAvaria);
             }while(cursor.moveToNext());
         }

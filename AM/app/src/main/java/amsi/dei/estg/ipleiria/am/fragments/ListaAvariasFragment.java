@@ -69,6 +69,12 @@ public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout
             SingletonGestorAvarias.getInstance(getContext()).getAllAvariasUserAPI(getContext());
         }
 
+        if(!AvariaJsonParser.isConnectionInternet(getContext())){
+            fab.setVisibility(View.GONE);
+        }else{
+            fab.setVisibility(View.VISIBLE);
+        }
+
         lvListaAvarias.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -131,7 +137,7 @@ public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout
             public boolean onQueryTextSubmit(String query) {
                 SingletonGestorAvarias.getInstance(getContext()).getAllDispositivosAPI(getContext());
                 SingletonGestorAvarias.getInstance(getContext()).getAllUsersAPI(getContext());
-                SingletonGestorAvarias.getInstance(getContext()).getDispositivobyRef(getContext(), query);
+                SingletonGestorAvarias.getInstance(getContext()).getAvariasbyRef(getContext(), query);
                 return true;
             }
 
@@ -174,11 +180,11 @@ public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout
 
     @Override
     public void onDispositivosRefresh(ArrayList<Dispositivo> dispositivo) {
-
+        this.dispositivos = dispositivo;
     }
 
     @Override
     public void onUtilizadoresRefresh(ArrayList<Utilizador> utilizador) {
-
+        this.utilizadores = utilizador;
     }
 }

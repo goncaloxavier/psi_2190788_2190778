@@ -14,6 +14,8 @@ import android.widget.TextView;
 import amsi.dei.estg.ipleiria.am.R;
 import amsi.dei.estg.ipleiria.am.models.SingletonGestorAvarias;
 import amsi.dei.estg.ipleiria.am.models.Utilizador;
+import amsi.dei.estg.ipleiria.am.views.AnomalyActivity;
+import amsi.dei.estg.ipleiria.am.views.LoginActivity;
 
 public class ProfileFragment extends Fragment {
     private TextView tvUsername, tvEmail, tvNumAvarias;
@@ -28,11 +30,21 @@ public class ProfileFragment extends Fragment {
         tvUsername = rootview.findViewById(R.id.textView3);
         tvEmail = rootview.findViewById(R.id.tvEmail);
         tvNumAvarias = rootview.findViewById(R.id.tvNumAvarias);
+        btnLogout = rootview.findViewById(R.id.btnLogout);
         utilizador = SingletonGestorAvarias.getInstance(getContext()).getUtilizador();
 
         tvUsername.setText(utilizador.getNomeUtilizador());
         tvEmail.setText(utilizador.getEmail());
         tvNumAvarias.setText(Integer.toString(SingletonGestorAvarias.getInstance(getContext()).getNumAvariasByUser(utilizador.getIdUtilizador())));
+
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SingletonGestorAvarias.getInstance(getContext()).setUtilizador(null);
+                Intent intent = new Intent(getContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
 
         return rootview;
     }

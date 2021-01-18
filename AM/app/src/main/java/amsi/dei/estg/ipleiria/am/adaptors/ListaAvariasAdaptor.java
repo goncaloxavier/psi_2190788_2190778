@@ -13,13 +13,17 @@ import java.util.ArrayList;
 
 import amsi.dei.estg.ipleiria.am.R;
 import amsi.dei.estg.ipleiria.am.models.Avaria;
+import amsi.dei.estg.ipleiria.am.models.Dispositivo;
 import amsi.dei.estg.ipleiria.am.models.SingletonGestorAvarias;
+import amsi.dei.estg.ipleiria.am.models.Utilizador;
 
 public class ListaAvariasAdaptor extends BaseAdapter {
 
     private Context context;
     private LayoutInflater layoutInflater;
     private ArrayList<Avaria> avarias;
+    private ArrayList<Dispositivo> dispositivos;
+    private ArrayList<Utilizador> utilizadores;
 
     public ListaAvariasAdaptor(Context context, ArrayList<Avaria> avarias) {
         this.context = context;

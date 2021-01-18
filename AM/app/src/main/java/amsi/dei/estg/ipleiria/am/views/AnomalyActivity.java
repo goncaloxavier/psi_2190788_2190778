@@ -26,6 +26,7 @@ import amsi.dei.estg.ipleiria.am.models.Avaria;
 import amsi.dei.estg.ipleiria.am.models.Dispositivo;
 import amsi.dei.estg.ipleiria.am.models.SingletonGestorAvarias;
 import amsi.dei.estg.ipleiria.am.models.Utilizador;
+import amsi.dei.estg.ipleiria.am.utils.AvariaJsonParser;
 
 public class AnomalyActivity extends AppCompatActivity  {
 
@@ -124,6 +125,10 @@ public class AnomalyActivity extends AppCompatActivity  {
             }else{
                 spinnerEstado.setEnabled(true);
             }
+
+            if(!AvariaJsonParser.isConnectionInternet(getApplicationContext())){
+                setFieldsEditable(false);
+            }
         }
         else{
             setTitle("Adicionar Avaria");
@@ -198,6 +203,8 @@ public class AnomalyActivity extends AppCompatActivity  {
             case R.id.itemRemover:
                 if(avaria.getIdUtilizador() != SingletonGestorAvarias.getInstance(getApplicationContext()).getUtilizador().getIdUtilizador() && SingletonGestorAvarias.getInstance(getApplicationContext()).getUtilizador().getTipo() == 0){
                     dialogSemPermissao();
+                }else if(!AvariaJsonParser.isConnectionInternet(getApplicationContext())){
+                    dialogSemInternet();
                 }else{
                     dialogRemover();
                 }
@@ -234,6 +241,21 @@ public class AnomalyActivity extends AppCompatActivity  {
         builder = new AlertDialog.Builder(this);
         builder.setTitle("Remover Avaria")
                 .setMessage("Nao tem permissoes para remover esta avaria!")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .show();
+    }
+
+    private void dialogSemInternet(){
+        AlertDialog.Builder builder;
+        builder = new AlertDialog.Builder(this);
+        builder.setTitle("Remover Avaria")
+                .setMessage("Nao tem ligacao a internet!")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -301,5 +323,10 @@ public class AnomalyActivity extends AppCompatActivity  {
 
     public void onClickFuncional(View view) {
         cbNFuncional.setChecked(false);
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 }
