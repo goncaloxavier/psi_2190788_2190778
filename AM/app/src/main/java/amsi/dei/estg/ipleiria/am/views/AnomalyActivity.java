@@ -15,12 +15,16 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
+
 import amsi.dei.estg.ipleiria.am.R;
 import amsi.dei.estg.ipleiria.am.models.Avaria;
 import amsi.dei.estg.ipleiria.am.models.Dispositivo;
@@ -159,10 +163,13 @@ public class AnomalyActivity extends AppCompatActivity  {
                     avaria.setEstado(positionE);
                     avaria.setIdDispositivo(positionD + 1);
                     SingletonGestorAvarias.getInstance(getApplicationContext()).editarAvariaAPI(avaria, getApplicationContext());
+                    setResult(RESULT_OK);
+                    finish();
                 }else{
                     setSpinnerDispositivo();
-                    int gravidade = 0;
-                    int tipo = 0;
+                    int gravidade = -1;
+                    int tipo = -1;
+
                     if(cbFuncional.isChecked()){
                         gravidade = 1;
                     }else{
@@ -178,9 +185,18 @@ public class AnomalyActivity extends AppCompatActivity  {
                     DateFormat df = new SimpleDateFormat("yyyy/MM/dd  HH:mm");
                     String sdt = df.format(currentTime);
                     positionD = positionD + 1;
-                    Avaria auxAvaria = new Avaria(0,0, gravidade,  tipo, positionD, sdt, edtDescricao.getText().toString(), utilizador.getIdUtilizador());
 
-                    SingletonGestorAvarias.getInstance(getApplicationContext()).adicionarAvariaAPI(auxAvaria, getApplicationContext());
+                    System.out.println("TIPO-> " + tipo);
+                    System.out.println("GRAVIDADE-> " + gravidade);
+
+                    if(edtDescricao.getText().toString().matches("")){
+                        Toast.makeText(getApplicationContext(), "Para comunicar a avaria o campo Descrição terá de ser preenchido!", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Avaria auxAvaria = new Avaria(0,0, gravidade,  tipo, positionD, sdt, edtDescricao.getText().toString(), utilizador.getIdUtilizador());
+                        SingletonGestorAvarias.getInstance(getApplicationContext()).adicionarAvariaAPI(auxAvaria, getApplicationContext());
+                        setResult(RESULT_OK);
+                        finish();
+                    }
                 }
             }
         });
@@ -305,7 +321,6 @@ public class AnomalyActivity extends AppCompatActivity  {
         }else{
             fab.setVisibility(View.VISIBLE);
         }
-
     }
 
 

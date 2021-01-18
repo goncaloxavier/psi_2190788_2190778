@@ -59,14 +59,18 @@ public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout
         SingletonGestorAvarias.getInstance(getContext()).setDispositivoListener(this);
         SingletonGestorAvarias.getInstance(getContext()).setUtilizadorListener(this);
 
-        if(SingletonGestorAvarias.getInstance(getContext()).getUtilizador().getTipo() != 0){
-            SingletonGestorAvarias.getInstance(getContext()).getAllUsersAPI(getContext());
-            SingletonGestorAvarias.getInstance(getContext()).getAllDispositivosAPI(getContext());
-            SingletonGestorAvarias.getInstance(getContext()).getAllAvariasAPI(getContext());
-        }else{
-            SingletonGestorAvarias.getInstance(getContext()).getAllUsersAPI(getContext());
-            SingletonGestorAvarias.getInstance(getContext()).getAllDispositivosAPI(getContext());
+        SingletonGestorAvarias.getInstance(getContext()).getAllAvariasAPI(getContext());
+        SingletonGestorAvarias.getInstance(getContext()).getAllUsersAPI(getContext());
+        SingletonGestorAvarias.getInstance(getContext()).getAllDispositivosAPI(getContext());
+
+        if(SingletonGestorAvarias.getInstance(getContext()).getUtilizador().getTipo() == 0){
             SingletonGestorAvarias.getInstance(getContext()).getAllAvariasUserAPI(getContext());
+        }
+
+        if((SingletonGestorAvarias.getInstance(getContext()).getDispositivos() == null || SingletonGestorAvarias.getInstance(getContext()).getUtilizadores() == null || SingletonGestorAvarias.getInstance(getContext()).getAvarias() == null) && AvariaJsonParser.isConnectionInternet(getContext())){
+            fab.setVisibility(View.GONE);
+        }else{
+            fab.setVisibility(View.VISIBLE);
         }
 
         if(!AvariaJsonParser.isConnectionInternet(getContext())){
@@ -152,21 +156,26 @@ public class ListaAvariasFragment extends Fragment implements SwipeRefreshLayout
 
     @Override
     public void onRefresh() {
-        if(SingletonGestorAvarias.getInstance(getContext()).getUtilizador().getTipo() != 0){
-            SingletonGestorAvarias.getInstance(getContext()).getAllUsersAPI(getContext());
-            SingletonGestorAvarias.getInstance(getContext()).getAllDispositivosAPI(getContext());
-            SingletonGestorAvarias.getInstance(getContext()).getAllAvariasAPI(getContext());
-        }else{
-            SingletonGestorAvarias.getInstance(getContext()).getAllUsersAPI(getContext());
-            SingletonGestorAvarias.getInstance(getContext()).getAllDispositivosAPI(getContext());
+        SingletonGestorAvarias.getInstance(getContext()).getAllAvariasAPI(getContext());
+        SingletonGestorAvarias.getInstance(getContext()).getAllUsersAPI(getContext());
+        SingletonGestorAvarias.getInstance(getContext()).getAllDispositivosAPI(getContext());
+
+        if(SingletonGestorAvarias.getInstance(getContext()).getUtilizador().getTipo() == 0){
             SingletonGestorAvarias.getInstance(getContext()).getAllAvariasUserAPI(getContext());
         }
+
         swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void onRefreshListaAvarias(ArrayList<Avaria> listaAvaria) {
         if(listaAvaria != null){
+            if(!AvariaJsonParser.isConnectionInternet(getContext())){
+                fab.setVisibility(View.GONE);
+            }else{
+                fab.setVisibility(View.VISIBLE);
+            }
+
             lvListaAvarias.setAdapter(new ListaAvariasAdaptor(getContext(), listaAvaria));
         }else{
             lvListaAvarias.setAdapter(null);

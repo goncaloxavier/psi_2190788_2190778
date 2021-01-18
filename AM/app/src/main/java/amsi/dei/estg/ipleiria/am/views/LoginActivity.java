@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
 
     @Override
     public void validateLogin(Utilizador utilizador) {
-        if(utilizador != null){
+        if(utilizador != null && utilizador.getEstado() != 0){
             SharedPreferences sharedPreferences = getSharedPreferences("login", Context.MODE_PRIVATE);
             SingletonGestorAvarias.getInstance(getApplicationContext()).saveUsertoSharedPref(sharedPreferences, utilizador);
             Intent intent = new Intent(this, MainActivity.class);
@@ -54,7 +54,6 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         else{
             edtUsername.setError("Wrong Username");
             edtPassword.setError("Wrong Password");
-            Toast.makeText(getApplicationContext(), "Erro", Toast.LENGTH_SHORT).show();
         }
     }
 

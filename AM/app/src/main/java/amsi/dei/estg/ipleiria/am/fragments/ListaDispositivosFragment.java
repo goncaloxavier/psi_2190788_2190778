@@ -26,7 +26,6 @@ public class ListaDispositivosFragment extends Fragment implements SwipeRefreshL
 
     private ListView lvListaDispositivos;
     private ArrayList<Dispositivo> dispositivos;
-    SearchView searchView;
     SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
@@ -51,29 +50,6 @@ public class ListaDispositivosFragment extends Fragment implements SwipeRefreshL
         swipeRefreshLayout.setOnRefreshListener(this);
 
         return rootview;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_pesquisa, menu);
-
-        MenuItem itemPesquisa = menu.findItem(R.id.itemPesquisar);
-        searchView = (SearchView) itemPesquisa.getActionView();
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                //SingletonGestorAvarias.getInstance(getContext()).getDispositivobyRef(getContext(), query);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override

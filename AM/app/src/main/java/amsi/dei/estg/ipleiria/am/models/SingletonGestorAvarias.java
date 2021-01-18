@@ -281,8 +281,11 @@ public class SingletonGestorAvarias implements AvariasListener, LoginListener, D
 
 
     public ArrayList<Dispositivo> getDispositivos() {
-        if(dispositivos.size() > 0){
-            return dispositivos;
+
+        if(dispositivos != null){
+            if(dispositivos.size() > 0){
+                return dispositivos;
+            }
         }
 
         return null;
@@ -403,7 +406,10 @@ public class SingletonGestorAvarias implements AvariasListener, LoginListener, D
         if(!AvariaJsonParser.isConnectionInternet(context)){
             if (avariasListener != null){
                 avarias = avariaDBHelper.getAllAvariasDB();
-                avariasListener.onRefreshListaAvarias(avarias);
+                adicionarAvariasDB(avarias);
+                if(utilizador.getTipo() != 0){
+                    avariasListener.onRefreshListaAvarias(avarias);
+                }
             }
         }else{
             JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, mUrlAPIAvariasOrd, null, new Response.Listener<JSONArray>() {
@@ -413,10 +419,12 @@ public class SingletonGestorAvarias implements AvariasListener, LoginListener, D
 
                     adicionarAvariasDB(avarias);
 
-                    if(avariasListener != null){
-                        avariasListener.onRefreshListaAvarias(avarias);
-                        utilizadorListener.onUtilizadoresRefresh(utilizadores);
-                        dispositivoListener.onDispositivosRefresh(dispositivos);
+                    if(utilizador.getTipo() != 0){
+                        if(avariasListener != null){
+                            avariasListener.onRefreshListaAvarias(avarias);
+                            utilizadorListener.onUtilizadoresRefresh(utilizadores);
+                            dispositivoListener.onDispositivosRefresh(dispositivos);
+                        }
                     }
 
                 }

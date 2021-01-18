@@ -27,6 +27,7 @@ public class ListaDispositivosAdaptor extends BaseAdapter {
         this.dispositivos = dispositivos;
     }
 
+
     @Override
     public int getCount() {
         int size = 0;
