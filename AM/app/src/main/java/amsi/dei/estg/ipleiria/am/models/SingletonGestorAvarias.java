@@ -17,6 +17,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -34,7 +40,7 @@ import amsi.dei.estg.ipleiria.am.utils.DispositivoJsonParser;
 import amsi.dei.estg.ipleiria.am.utils.EstatisticaJsonParser;
 import amsi.dei.estg.ipleiria.am.utils.UtilizadorJsonParser;
 
-public class SingletonGestorAvarias implements AvariasListener, LoginListener, DispositivoListener, UtilizadorListener, EstatisticaListener {
+public class SingletonGestorAvarias implements AvariasListener, LoginListener, DispositivoListener, UtilizadorListener, EstatisticaListener, MqttCallback {
 
     private ArrayList<Avaria> avarias;
     private ArrayList<Dispositivo> dispositivos;
@@ -54,6 +60,7 @@ public class SingletonGestorAvarias implements AvariasListener, LoginListener, D
     private UtilizadorListener utilizadorListener;
     private DispositivoListener dispositivoListener;
     private EstatisticaListener estatisticaListener;
+    private MqttCallback mqttCallback;
 
     private static final String ip = "192.168.0.15";
     private static final String mUrlAPIAvarias = "http://" + ip + ":8080/avarias";
@@ -418,6 +425,7 @@ public class SingletonGestorAvarias implements AvariasListener, LoginListener, D
                     avarias = AvariaJsonParser.parserJsonAvarias(response);
 
                     adicionarAvariasDB(avarias);
+                    mosquitto();
 
                     if(utilizador.getTipo() != 0){
                         if(avariasListener != null){
@@ -650,7 +658,7 @@ public class SingletonGestorAvarias implements AvariasListener, LoginListener, D
         }
     }
 
-    public void removerAvariaAPI(final  Avaria  avaria,  final Context context){
+    public void removerAvariaAPI(final Avaria avaria,  final Context context){
         StringRequest request = new StringRequest(Request.Method.DELETE, mUrlAPIAvarias + '/' + avaria.getIdAvaria(), new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -779,6 +787,11 @@ public class SingletonGestorAvarias implements AvariasListener, LoginListener, D
         this.estatisticaListener = estatisticaListener;
     }
 
+    public void setMqttCallback(MqttCallback mqttCallback) {
+        this.mosquitto();
+        this.mqttCallback = mqttCallback;
+    }
+
     @Override
     public void onRefreshListaAvarias(ArrayList<Avaria> listaAvaria) {
 
@@ -816,5 +829,32 @@ public class SingletonGestorAvarias implements AvariasListener, LoginListener, D
     @Override
     public void onEstatisticaRefresh(Estatistica estatistica) {
 
+    }
+
+    @Override
+    public void connectionLost(Throwable cause) {
+
+    }
+
+    @Override
+    public void messageArrived(String topic, MqttMessage message) throws Exception {
+        mqttCallback.messageArrived(topic, message);
+    }
+
+    @Override
+    public void deliveryComplete(IMqttDeliveryToken token) {
+
+    }
+
+    public void mosquitto() {
+        try {
+            MqttClient client = new MqttClient("tcp://192.168.0.15:1883", "android-sub", new MemoryPersistence());
+            client.setCallback(this);
+            client.connect();
+            String topic = "INSERT";
+            client.subscribe(topic);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -87,7 +87,7 @@ public class ListaAvariasAdaptor extends BaseAdapter {
             try{
                 descricao.setText(avaria.getDescricao());
                 dataAvaria.setText(avaria.getDate());
-                referencia.setText(String.valueOf(avaria.getIdDispositivo()));
+                referencia.setText(SingletonGestorAvarias.getInstance(context).getDispositivo(avaria.getIdDispositivo()).getReferencia());
                 utilizador.setText(SingletonGestorAvarias.getInstance(context).getUtilizador(avaria.getIdUtilizador()).getNomeUtilizador());
                 estado.setText("");
                 if(avaria.getTipo() == 0){
